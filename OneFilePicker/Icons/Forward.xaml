@@ -1,0 +1,14 @@
+<Canvas Width="100" Height="100" ClipToBounds="True" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
+    <Canvas Name="Right">
+        <Path Stroke="#FF000000" StrokeThickness="6">
+            <Path.Data>
+                <EllipseGeometry RadiusX="47" RadiusY="47" Center="50,50" />
+            </Path.Data>
+        </Path>
+        <Path Fill="#FF000000">
+            <Path.Data>
+                <PathGeometry FillRule="Nonzero" Figures="M21,47L68,47 54,33 62,33 79,50 62,67 54,67 68,53 21,53z" />
+            </Path.Data>
+        </Path>
+    </Canvas>
+</Canvas>

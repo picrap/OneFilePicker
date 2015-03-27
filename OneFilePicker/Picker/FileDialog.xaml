@@ -1,0 +1,70 @@
+﻿<UserControl x:Class="OneFilePicker.Picker.FileDialog"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:picker="clr-namespace:OneFilePicker.Picker"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300" x:Name="This" >
+
+    <UserControl.Resources>
+        <Thickness x:Key="LeftMargin">8,0,0,0</Thickness>
+        <Thickness x:Key="TopMargin">0,4,0,0</Thickness>
+    </UserControl.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Navigator bar -->
+        <StackPanel Grid.Row="0" Orientation="Horizontal">
+        </StackPanel>
+
+        <!-- Display bar -->
+        <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="{DynamicResource TopMargin}">
+        </StackPanel>
+
+        <!-- File tree and selection panel -->
+        <Grid Grid.Row="2" Margin="{DynamicResource TopMargin}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="150"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <GridSplitter Width="5" ShowsPreview="True" />
+            <TreeView Grid.Column="0" ItemsSource="{Binding RootNodes, ElementName=This}" >
+                <TreeView.Resources>
+                    <HierarchicalDataTemplate x:Key="Default" DataType="picker:Node" ItemsSource="{Binding Children}" >
+                        <StackPanel Orientation="Horizontal">
+                            <Image Source="{Binding Icon}" Stretch="UniformToFill" Height="16" />
+                            <TextBlock Text="{Binding Name}" />
+                        </StackPanel>
+                    </HierarchicalDataTemplate>
+                </TreeView.Resources>
+            </TreeView>
+        </Grid>
+
+        <!-- Filters and selection -->
+        <Grid Grid.Row="3" Margin="{DynamicResource TopMargin}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Column="0" Text="{Binding FileNameLabel, ElementName=This}"/>
+            <TextBox Grid.Column="1" Text="{Binding FileName, ElementName=This}" Margin="{DynamicResource LeftMargin}" />
+            <ComboBox Grid.Column="2" ItemsSource="{Binding Filters, ElementName=This}" DisplayMemberPath="Display" SelectedIndex="{Binding FilterIndex, ElementName=This}" Margin="{DynamicResource LeftMargin}" />
+        </Grid>
+
+        <!-- Buttons -->
+        <StackPanel Grid.Row="4" HorizontalAlignment="Right" Orientation="Horizontal" Margin="{DynamicResource TopMargin}">
+            <Button Command="{Binding Select, ElementName=This}" Content="{Binding SelectText, ElementName=This}" MinWidth="80" />
+            <Button Command="{Binding Cancel, ElementName=This}" Content="{Binding CancelText, ElementName=This}" MinWidth="80" Margin="{DynamicResource LeftMargin}" />
+        </StackPanel>
+
+    </Grid>
+</UserControl>
