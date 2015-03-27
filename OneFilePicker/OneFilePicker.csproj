@@ -35,6 +35,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xaml">
@@ -45,11 +46,15 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="File\FileNode.cs" />
+    <Compile Include="File\ImageLoader.cs" />
+    <Compile Include="File\ImageLoader.Interop.cs" />
+    <Compile Include="File\RootNode.cs" />
     <Compile Include="Picker\FileDialog.xaml.cs">
       <DependentUpon>FileDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="Picker\Filter.cs" />
-    <Compile Include="Picker\Node.cs" />
+    <Compile Include="Picker\INode.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>

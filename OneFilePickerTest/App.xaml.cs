@@ -1,12 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
-using System.Linq;
-using System.Windows;
+﻿#region OneFilePicker
+// OneFilePicker
+// Abstract (extensible) file picker
+// https://github.com/picrap/OneFilePicker
+// Released under MIT license http://opensource.org/licenses/mit-license.php
+#endregion
 
 namespace OneFilePickerTest
 {
+    using System.Windows;
+
     /// <summary>
     /// Logique d'interaction pour App.xaml
     /// </summary>

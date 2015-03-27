@@ -1,10 +1,18 @@
-﻿
+﻿#region OneFilePicker
+// OneFilePicker
+// Abstract (extensible) file picker
+// https://github.com/picrap/OneFilePicker
+// Released under MIT license http://opensource.org/licenses/mit-license.php
+#endregion
+
 namespace OneFilePicker.Picker
 {
     using System.Collections.Generic;
     using System.Linq;
     using System.Windows;
+    using System.Windows.Controls;
     using System.Windows.Input;
+    using File;
 
     public partial class FileDialog
     {
@@ -89,6 +97,24 @@ namespace OneFilePicker.Picker
             set { SetValue(CancelProperty, value); }
         }
 
+        public static readonly DependencyProperty RootNodesProperty = DependencyProperty.Register(
+            "RootNodes", typeof(INode[]), typeof(FileDialog), new PropertyMetadata(new INode[] { new RootNode() }));
+
+        public INode[] RootNodes
+        {
+            get { return (INode[])GetValue(RootNodesProperty); }
+            set { SetValue(RootNodesProperty, value); }
+        }
+
+        public static readonly DependencyProperty SelectedFolderProperty = DependencyProperty.Register(
+            "SelectedFolder", typeof (INode), typeof (FileDialog), new PropertyMetadata(default(INode)));
+
+        public INode SelectedFolder
+        {
+            get { return (INode) GetValue(SelectedFolderProperty); }
+            set { SetValue(SelectedFolderProperty, value); }
+        }
+
         public FileDialog()
         {
             InitializeComponent();
@@ -126,6 +152,11 @@ namespace OneFilePicker.Picker
             for (int index = 0; index < filtersParts.Length; index += 2)
                 filters.Add(Picker.Filter.FromLiteral(filtersParts[index], filtersParts[index + 1]));
             Filters = filters.ToArray();
+        }
+
+        private void TreeView_OnSelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
+        {
+            SelectedFolder = (INode) ((TreeView) sender).SelectedItem;
         }
     }
 }
