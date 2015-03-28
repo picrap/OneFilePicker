@@ -3,7 +3,6 @@ namespace OneFilePicker.File
 {
     using System;
     using System.Collections.Generic;
-    using System.IO;
     using System.Runtime.InteropServices;
     using System.Windows;
     using System.Windows.Interop;
@@ -140,7 +139,7 @@ namespace OneFilePicker.File
         internal static string GetFileType(string filename)
         {
             var shinfo = new SHFILEINFO();
-            Win32.SHGetFileInfo(filename, Win32.FILE_ATTRIBUTE_NORMAL, ref shinfo, (uint)Marshal.SizeOf(shinfo), Win32.SHGFI_TYPENAME | Win32.SHGFI_USEFILEATTRIBUTES);
+            Win32.SHGetFileInfo(filename, 0, ref shinfo, (uint)Marshal.SizeOf(shinfo), Win32.SHGFI_TYPENAME);
             return shinfo.szTypeName;
         }
     }
