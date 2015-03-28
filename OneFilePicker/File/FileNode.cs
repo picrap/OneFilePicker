@@ -94,7 +94,7 @@ namespace OneFilePicker.File
             else
             {
                 var fileInfo = new FileInfo(path);
-                LengthKB = fileInfo.Length >> 10;
+                LengthKB = (fileInfo.Length + 1023) >> 10;
                 LastWriteTime = fileInfo.LastWriteTime;
             }
         }
