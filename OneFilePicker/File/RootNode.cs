@@ -7,11 +7,15 @@
 
 namespace OneFilePicker.File
 {
+    using System;
     using System.IO;
     using System.Linq;
     using System.Windows.Media;
     using Picker;
 
+    /// <summary>
+    /// This is the default when no custom INode is provided to <see cref="FileDialog"/>.
+    /// </summary>
     public class RootNode : INode
     {
         public INode[] Children { get; private set; }
@@ -30,6 +34,21 @@ namespace OneFilePicker.File
             {
                 return "";
             }
+        }
+
+        public DateTime LastWriteTime
+        {
+            get { return DateTime.MinValue; }
+        }
+
+        public string DisplayType
+        {
+            get { return ""; }
+        }
+
+        public long? LengthKB
+        {
+            get { return null; }
         }
 
         public RootNode()

@@ -54,6 +54,7 @@
       <DependentUpon>FileDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="Picker\Filter.cs" />
+    <Compile Include="Picker\GridViewSort.cs" />
     <Compile Include="Picker\INode.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>

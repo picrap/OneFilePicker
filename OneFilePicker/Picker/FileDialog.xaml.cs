@@ -13,6 +13,7 @@ namespace OneFilePicker.Picker
     using System.Windows.Controls;
     using System.Windows.Input;
     using File;
+    using Wpf.Util;
 
     public partial class FileDialog
     {
@@ -107,14 +108,17 @@ namespace OneFilePicker.Picker
         }
 
         public static readonly DependencyProperty SelectedFolderProperty = DependencyProperty.Register(
-            "SelectedFolder", typeof (INode), typeof (FileDialog), new PropertyMetadata(default(INode)));
+            "SelectedFolder", typeof(INode), typeof(FileDialog), new PropertyMetadata(default(INode)));
 
         public INode SelectedFolder
         {
-            get { return (INode) GetValue(SelectedFolderProperty); }
+            get { return (INode)GetValue(SelectedFolderProperty); }
             set { SetValue(SelectedFolderProperty, value); }
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FileDialog"/> class.
+        /// </summary>
         public FileDialog()
         {
             InitializeComponent();
@@ -156,7 +160,7 @@ namespace OneFilePicker.Picker
 
         private void TreeView_OnSelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
-            SelectedFolder = (INode) ((TreeView) sender).SelectedItem;
+            SelectedFolder = (INode)((TreeView)sender).SelectedItem;
         }
     }
 }

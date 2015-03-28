@@ -27,7 +27,7 @@ namespace OneFilePicker.File
                     {
                         try
                         {
-                            _children = Directory.EnumerateFileSystemEntries(Path).Select(CreateChild).ToArray();
+                            _children = Directory.EnumerateFileSystemEntries(Path).Where(IsVisible).Select(CreateChild).ToArray();
                         }
                         catch (UnauthorizedAccessException)
                         { }
@@ -35,6 +35,14 @@ namespace OneFilePicker.File
                 }
                 return _children;
             }
+        }
+
+        private static bool IsVisible(string path)
+        {
+            var attributes = File.GetAttributes(path);
+            if (attributes.HasFlag(FileAttributes.System))
+                return false;
+            return true;
         }
 
         private INode CreateChild(string path)
@@ -58,20 +66,17 @@ namespace OneFilePicker.File
             }
         }
 
-        private bool? _isDirectory;
-        public bool IsFolder
-        {
-            get
-            {
-                if (!_isDirectory.HasValue)
-                    _isDirectory = Directory.Exists(Path);
-                return _isDirectory.Value;
-            }
-        }
+        public bool IsFolder { get; private set; }
 
         public string DisplayName { get; private set; }
 
         public string Path { get; private set; }
+
+        public DateTime LastWriteTime { get; private set; }
+
+        public string DisplayType { get; private set; }
+
+        public long? LengthKB { get; private set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FileNode"/> class.
@@ -82,6 +87,16 @@ namespace OneFilePicker.File
         {
             Path = path;
             DisplayName = displayName ?? System.IO.Path.GetFileName(path);
+            DisplayType = ImageLoader.GetFileType(path);
+            IsFolder = Directory.Exists(path);
+            if (IsFolder)
+                LastWriteTime = new DirectoryInfo(path).LastWriteTime;
+            else
+            {
+                var fileInfo = new FileInfo(path);
+                LengthKB = fileInfo.Length >> 10;
+                LastWriteTime = fileInfo.LastWriteTime;
+            }
         }
     }
 }

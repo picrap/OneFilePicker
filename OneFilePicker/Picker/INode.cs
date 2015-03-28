@@ -7,6 +7,7 @@
 
 namespace OneFilePicker.Picker
 {
+    using System;
     using System.Windows.Media;
 
     /// <summary>
@@ -56,5 +57,27 @@ namespace OneFilePicker.Picker
         /// The path.
         /// </value>
         string Path { get; }
+
+        /// <summary>
+        /// Gets the last write time.
+        /// </summary>
+        /// <value>
+        /// The last write time.
+        /// </value>
+        DateTime LastWriteTime { get; }
+        /// <summary>
+        /// Gets the display type.
+        /// </summary>
+        /// <value>
+        /// The display type.
+        /// </value>
+        string DisplayType { get; }
+        /// <summary>
+        /// Gets the length kb.
+        /// </summary>
+        /// <value>
+        /// The length kb.
+        /// </value>
+        long? LengthKB { get; }
     }
 }
