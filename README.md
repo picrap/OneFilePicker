@@ -1,2 +1,1 @@
-# OneFilePicker
-WPF file picker dialog, with ability to pick FTP/SFTP files
+This project is deprecated, I'm switching to [OneFileExplorer](https://github.com/picrap/OneFileExplorer)
