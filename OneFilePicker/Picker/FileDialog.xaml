@@ -44,7 +44,7 @@
                       SelectedItemChanged="TreeView_OnSelectedItemChanged">
                 <TreeView.ItemTemplate>
                     <HierarchicalDataTemplate DataType="picker:INode" ItemsSource="{Binding FolderChildren}" >
-                        <StackPanel Orientation="Horizontal" Margin="-100,2">
+                        <StackPanel Orientation="Horizontal" Margin="0,2">
                             <Image Source="{Binding Icon}" Stretch="UniformToFill" Height="16" />
                             <TextBlock Text="{Binding DisplayName}" Margin="{DynamicResource LeftMargin}" />
                         </StackPanel>
