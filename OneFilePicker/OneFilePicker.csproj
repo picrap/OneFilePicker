@@ -50,6 +50,18 @@
     <Compile Include="File\ImageLoader.cs" />
     <Compile Include="File\ImageLoader.Interop.cs" />
     <Compile Include="File\RootNode.cs" />
+    <Compile Include="Icons\BackIcon.xaml.cs">
+      <DependentUpon>BackIcon.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Icons\ForwardIcon.xaml.cs">
+      <DependentUpon>ForwardIcon.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Icons\RefreshIcon.xaml.cs">
+      <DependentUpon>RefreshIcon.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Icons\UpIcon.xaml.cs">
+      <DependentUpon>UpIcon.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Picker\FileDialog.xaml.cs">
       <DependentUpon>FileDialog.xaml</DependentUpon>
     </Compile>
@@ -62,21 +74,21 @@
     <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
-    <Page Include="Icons\Back.xaml">
-      <Generator>MSBuild:Compile</Generator>
+    <Page Include="Icons\BackIcon.xaml">
       <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Icons\Forward.xaml">
-      <Generator>MSBuild:Compile</Generator>
+    <Page Include="Icons\ForwardIcon.xaml">
       <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Icons\Refresh.xaml">
-      <Generator>MSBuild:Compile</Generator>
+    <Page Include="Icons\RefreshIcon.xaml">
       <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Icons\Up.xaml">
-      <Generator>MSBuild:Compile</Generator>
+    <Page Include="Icons\UpIcon.xaml">
       <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Picker\FileDialog.xaml">
       <SubType>Designer</SubType>

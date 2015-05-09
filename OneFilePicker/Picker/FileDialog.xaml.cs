@@ -13,7 +13,6 @@ namespace OneFilePicker.Picker
     using System.Windows.Controls;
     using System.Windows.Input;
     using File;
-    using Wpf.Util;
 
     public partial class FileDialog
     {
@@ -158,7 +157,7 @@ namespace OneFilePicker.Picker
             Filters = filters.ToArray();
         }
 
-        private void TreeView_OnSelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
+        private void OnSelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
             SelectedFolder = (INode)((TreeView)sender).SelectedItem;
         }

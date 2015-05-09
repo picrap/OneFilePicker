@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:picker="clr-namespace:OneFilePicker.Picker"
              xmlns:util="clr-namespace:Wpf.Util"
-             xmlns:system="clr-namespace:System;assembly=mscorlib"
+             xmlns:icons="clr-namespace:OneFilePicker.Icons"
              mc:Ignorable="d" 
              d:DesignHeight="400" d:DesignWidth="800" x:Name="This" >
 
@@ -14,6 +14,22 @@
         <Thickness x:Key="TopMargin">0,4,0,0</Thickness>
         <Style x:Key="LeftColumnHeader" TargetType="GridViewColumnHeader">
             <Setter Property="HorizontalContentAlignment" Value="Left"/>
+        </Style>
+        <Style x:Key="NavigationButtonStyle" TargetType="{x:Type icons:BackIcon}">
+        	<Setter Property="Template">
+        		<Setter.Value>
+        			<ControlTemplate TargetType="{x:Type icons:BackIcon}">
+        				<Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" 
+                                Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}" SnapsToDevicePixels="True">
+        					<ContentPresenter ContentTemplate="{TemplateBinding ContentTemplate}" Content="{TemplateBinding Content}"
+                                              ContentStringFormat="{TemplateBinding ContentStringFormat}" 
+                                              HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" 
+                                              SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" 
+                                              VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+        				</Border>
+        			</ControlTemplate>
+        		</Setter.Value>
+        	</Setter>
         </Style>
 
     </UserControl.Resources>
@@ -28,7 +44,22 @@
         </Grid.RowDefinitions>
 
         <!-- Navigator bar -->
-        <StackPanel Grid.Row="0" Orientation="Horizontal" />
+        <Grid Grid.Row="0" >
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <Button Grid.Column="0" Margin="0,0,8,0">
+                <icons:BackIcon Height="20" Width="20" Style="{DynamicResource NavigationButtonStyle}" />
+            </Button>
+            <icons:ForwardIcon Grid.Column="1" Height="20" Width="20" Margin="0,0,8,0"/>
+            <icons:UpIcon Grid.Column="2" Height="20" Width="20" Margin="0,0,8,0"/>
+            <TextBox Grid.Column="3" Margin="0,0,2,0"/>
+            <icons:RefreshIcon Grid.Column="4" Height="20" Width="20" />
+        </Grid>
 
         <!-- Display bar -->
         <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="{DynamicResource TopMargin}" />
@@ -41,7 +72,7 @@
             </Grid.ColumnDefinitions>
             <GridSplitter Width="5" ShowsPreview="True" />
             <TreeView Grid.Column="0" ItemsSource="{Binding RootNodes, ElementName=This}" Margin="0,0,5,0" BorderThickness="0" 
-                      SelectedItemChanged="TreeView_OnSelectedItemChanged">
+                      SelectedItemChanged="OnSelectedItemChanged">
                 <TreeView.ItemTemplate>
                     <HierarchicalDataTemplate DataType="picker:INode" ItemsSource="{Binding FolderChildren}" >
                         <StackPanel Orientation="Horizontal" Margin="0,2">
@@ -51,7 +82,7 @@
                     </HierarchicalDataTemplate>
                 </TreeView.ItemTemplate>
             </TreeView>
-            <ListView x:Name="NodesList" Grid.Column="1" BorderThickness="0" ItemsSource="{Binding SelectedFolder.Children, ElementName=This}"
+            <ListView Grid.Column="1" BorderThickness="0" ItemsSource="{Binding SelectedFolder.Children, ElementName=This}"
                       util:GridViewSort.AutoSort="True">
                 <ListView.View>
                     <GridView>

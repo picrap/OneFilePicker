@@ -1,0 +1,11 @@
+﻿<UserControl x:Class="OneFilePicker.Icons.ForwardIcon"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+            >
+    <Path Fill="#FF000000" Stretch="Uniform" Data="F0 M0,50 A 50,50 180 1 1 100,50 A 50,50 180 0 1 0,50 
+                                  M6,50 A 44,44 180 1 1 94,50 A 44,44 180 0 1 6,50
+                                  M21,47L68,47 54,33 62,33 79,50 62,67 54,67 68,53 21,53z" />
+</UserControl>
