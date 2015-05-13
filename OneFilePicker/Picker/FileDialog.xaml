@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="OneFilePicker.Picker.FileDialog"
+﻿<UserControl
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -6,30 +6,62 @@
              xmlns:picker="clr-namespace:OneFilePicker.Picker"
              xmlns:util="clr-namespace:Wpf.Util"
              xmlns:icons="clr-namespace:OneFilePicker.Icons"
+             xmlns:Themes="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Aero" x:Class="OneFilePicker.Picker.FileDialog"
              mc:Ignorable="d" 
              d:DesignHeight="400" d:DesignWidth="800" x:Name="This" >
 
     <UserControl.Resources>
         <Thickness x:Key="LeftMargin">8,0,0,0</Thickness>
         <Thickness x:Key="TopMargin">0,4,0,0</Thickness>
-        <Style x:Key="LeftColumnHeader" TargetType="GridViewColumnHeader">
+        <Style x:Key="LeftColumnHeader" TargetType="{x:Type GridViewColumnHeader}">
             <Setter Property="HorizontalContentAlignment" Value="Left"/>
         </Style>
-        <Style x:Key="NavigationButtonStyle" TargetType="{x:Type icons:BackIcon}">
-        	<Setter Property="Template">
-        		<Setter.Value>
-        			<ControlTemplate TargetType="{x:Type icons:BackIcon}">
-        				<Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" 
-                                Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}" SnapsToDevicePixels="True">
-        					<ContentPresenter ContentTemplate="{TemplateBinding ContentTemplate}" Content="{TemplateBinding Content}"
-                                              ContentStringFormat="{TemplateBinding ContentStringFormat}" 
-                                              HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" 
-                                              SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" 
-                                              VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
-        				</Border>
-        			</ControlTemplate>
-        		</Setter.Value>
-        	</Setter>
+
+        <Style x:Key="ButtonFocusVisual">
+            <Setter Property="Control.Template">
+                <Setter.Value>
+                    <ControlTemplate>
+                        <Rectangle StrokeDashArray="1 2" StrokeThickness="1" Stroke="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" SnapsToDevicePixels="true" Margin="2"/>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <LinearGradientBrush x:Key="ButtonNormalBackground" EndPoint="0,1" StartPoint="0,0">
+            <GradientStop Color="#F3F3F3" Offset="0"/>
+            <GradientStop Color="#EBEBEB" Offset="0.5"/>
+            <GradientStop Color="#DDDDDD" Offset="0.5"/>
+            <GradientStop Color="#CDCDCD" Offset="1"/>
+        </LinearGradientBrush>
+        <SolidColorBrush x:Key="ButtonNormalBorder" Color="#FF707070"/>
+        <Style TargetType="{x:Type Button}">
+            <Setter Property="FocusVisualStyle" Value="{StaticResource ButtonFocusVisual}"/>
+            <Setter Property="Background" Value="{StaticResource ButtonNormalBackground}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource ButtonNormalBorder}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Padding" Value="1"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Themes:ButtonChrome x:Name="Chrome" BorderBrush="{TemplateBinding BorderBrush}" Background="{TemplateBinding Background}" RenderMouseOver="{TemplateBinding IsMouseOver}" RenderPressed="{TemplateBinding IsPressed}" RenderDefaulted="{TemplateBinding IsDefaulted}" SnapsToDevicePixels="true">
+                            <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                        </Themes:ButtonChrome>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsKeyboardFocused" Value="true">
+                                <Setter Property="RenderDefaulted" TargetName="Chrome" Value="true"/>
+                            </Trigger>
+                            <Trigger Property="ToggleButton.IsChecked" Value="true">
+                                <Setter Property="RenderPressed" TargetName="Chrome" Value="true"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="false">
+                                <Setter Property="Foreground" Value="#ADADAD"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
         </Style>
 
     </UserControl.Resources>
@@ -52,13 +84,19 @@
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
-            <Button Grid.Column="0" Margin="0,0,8,0">
-                <icons:BackIcon Height="20" Width="20" Style="{DynamicResource NavigationButtonStyle}" />
+            <Button Grid.Column="0" >
+                <icons:BackIcon Height="20" Width="20"  />
             </Button>
-            <icons:ForwardIcon Grid.Column="1" Height="20" Width="20" Margin="0,0,8,0"/>
-            <icons:UpIcon Grid.Column="2" Height="20" Width="20" Margin="0,0,8,0"/>
+            <Button Grid.Column="1" Margin="0,0,8,0" >
+                <icons:ForwardIcon Height="20" Width="20"/>
+            </Button>
+            <Button Grid.Column="2" Margin="0,0,8,0" >
+                <icons:UpIcon Height="20" Width="20"/>
+            </Button>
             <TextBox Grid.Column="3" Margin="0,0,2,0"/>
-            <icons:RefreshIcon Grid.Column="4" Height="20" Width="20" />
+            <Button Grid.Column="4" >
+                <icons:RefreshIcon Height="20" Width="20" />
+            </Button>
         </Grid>
 
         <!-- Display bar -->
@@ -72,7 +110,7 @@
             </Grid.ColumnDefinitions>
             <GridSplitter Width="5" ShowsPreview="True" />
             <TreeView Grid.Column="0" ItemsSource="{Binding RootNodes, ElementName=This}" Margin="0,0,5,0" BorderThickness="0" 
-                      SelectedItemChanged="OnSelectedItemChanged">
+				SelectedItemChanged="OnSelectedItemChanged">
                 <TreeView.ItemTemplate>
                     <HierarchicalDataTemplate DataType="picker:INode" ItemsSource="{Binding FolderChildren}" >
                         <StackPanel Orientation="Horizontal" Margin="0,2">
@@ -83,11 +121,11 @@
                 </TreeView.ItemTemplate>
             </TreeView>
             <ListView Grid.Column="1" BorderThickness="0" ItemsSource="{Binding SelectedFolder.Children, ElementName=This}"
-                      util:GridViewSort.AutoSort="True">
+				util:GridViewSort.AutoSort="True">
                 <ListView.View>
                     <GridView>
                         <GridViewColumn Header="Name" Width="200" HeaderContainerStyle="{StaticResource LeftColumnHeader}" 
-                                        util:GridViewSort.PropertyName="~IsFolder,DisplayName" util:GridViewSort.DefaultSort="True" >
+							util:GridViewSort.PropertyName="~IsFolder,DisplayName" util:GridViewSort.DefaultSort="True" >
                             <GridViewColumn.CellTemplate>
                                 <DataTemplate DataType="picker:INode">
                                     <StackPanel Orientation="Horizontal">
@@ -98,11 +136,11 @@
                             </GridViewColumn.CellTemplate>
                         </GridViewColumn>
                         <GridViewColumn Header="Date Modified" HeaderContainerStyle="{StaticResource LeftColumnHeader}" Width="150"
-                                        util:GridViewSort.PropertyName="LastWriteTime" DisplayMemberBinding="{Binding LastWriteTime}" />
+							util:GridViewSort.PropertyName="LastWriteTime" DisplayMemberBinding="{Binding LastWriteTime}" />
                         <GridViewColumn Header="Type" HeaderContainerStyle="{StaticResource LeftColumnHeader}" Width="180"
-                                        util:GridViewSort.PropertyName="DisplayType" DisplayMemberBinding="{Binding DisplayType}" />
+							util:GridViewSort.PropertyName="DisplayType" DisplayMemberBinding="{Binding DisplayType}" />
                         <GridViewColumn Header="Size" HeaderContainerStyle="{StaticResource LeftColumnHeader}" Width="100"
-                                        util:GridViewSort.PropertyName="LengthKB" DisplayMemberBinding="{Binding LengthKB}" />
+							util:GridViewSort.PropertyName="LengthKB" DisplayMemberBinding="{Binding LengthKB}" />
                     </GridView>
                 </ListView.View>
             </ListView>
