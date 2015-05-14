@@ -84,17 +84,17 @@
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
-            <Button Grid.Column="0" >
+            <Button Grid.Column="0" IsEnabled="{Binding CanNavigateBack, Mode=OneWay, ElementName=This}" Click="NavigateBack">
                 <icons:BackIcon Height="20" Width="20"  />
             </Button>
-            <Button Grid.Column="1" Margin="0,0,8,0" >
+            <Button Grid.Column="1" Margin="0,0,8,0" IsEnabled="{Binding CanNavigateForward, Mode=OneWay, ElementName=This}" Click="NavigateForward">
                 <icons:ForwardIcon Height="20" Width="20"/>
             </Button>
-            <Button Grid.Column="2" Margin="0,0,8,0" >
+            <Button Grid.Column="2" Margin="0,0,8,0" IsEnabled="{Binding CanNavigateUp, Mode=OneWay, ElementName=This}" Click="NavigateUp">
                 <icons:UpIcon Height="20" Width="20"/>
             </Button>
             <TextBox Grid.Column="3" Margin="0,0,2,0"/>
-            <Button Grid.Column="4" >
+            <Button Grid.Column="4" Click="Refresh">
                 <icons:RefreshIcon Height="20" Width="20" />
             </Button>
         </Grid>
@@ -109,10 +109,10 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
             <GridSplitter Width="5" ShowsPreview="True" />
-            <TreeView Grid.Column="0" ItemsSource="{Binding RootNodes, ElementName=This}" Margin="0,0,5,0" BorderThickness="0" 
+            <TreeView Grid.Column="0" x:Name="NodeTree" ItemsSource="{Binding RootNodes, ElementName=This}" Margin="0,0,5,0" BorderThickness="0" 
 				SelectedItemChanged="OnSelectedItemChanged">
                 <TreeView.ItemTemplate>
-                    <HierarchicalDataTemplate DataType="picker:INode" ItemsSource="{Binding FolderChildren}" >
+                    <HierarchicalDataTemplate DataType="picker:INode" ItemsSource="{Binding FolderChildren}"  >
                         <StackPanel Orientation="Horizontal" Margin="0,2">
                             <Image Source="{Binding Icon}" Stretch="UniformToFill" Height="16" />
                             <TextBlock Text="{Binding DisplayName}" Margin="{DynamicResource LeftMargin}" />
@@ -120,7 +120,7 @@
                     </HierarchicalDataTemplate>
                 </TreeView.ItemTemplate>
             </TreeView>
-            <ListView Grid.Column="1" BorderThickness="0" ItemsSource="{Binding SelectedFolder.Children, ElementName=This}"
+            <ListView Grid.Column="1" x:Name="FilesList" BorderThickness="0" ItemsSource="{Binding SelectedFolder.Children, ElementName=This}"
 				util:GridViewSort.AutoSort="True">
                 <ListView.View>
                     <GridView>

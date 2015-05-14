@@ -106,13 +106,38 @@ namespace OneFilePicker.Picker
             set { SetValue(RootNodesProperty, value); }
         }
 
-        public static readonly DependencyProperty SelectedFolderProperty = DependencyProperty.Register(
-            "SelectedFolder", typeof(INode), typeof(FileDialog), new PropertyMetadata(default(INode)));
+        public static readonly DependencyProperty SelectedFolderProperty
+            = DependencyProperty.Register("SelectedFolder", typeof(INode), typeof(FileDialog),
+                new PropertyMetadata(null, (d, e) => { ((FileDialog)d).OnSelectedFolderChanged(); }));
 
         public INode SelectedFolder
         {
             get { return (INode)GetValue(SelectedFolderProperty); }
             set { SetValue(SelectedFolderProperty, value); }
+        }
+
+        public static readonly DependencyProperty CanNavigateBackProperty
+            = DependencyProperty.Register("CanNavigateBack", typeof(bool), typeof(FileDialog), new PropertyMetadata(false));
+        public bool CanNavigateBack
+        {
+            get { return (bool)GetValue(CanNavigateBackProperty); }
+            set { SetValue(CanNavigateBackProperty, value); }
+        }
+
+        public static readonly DependencyProperty CanNavigateForwardProperty
+            = DependencyProperty.Register("CanNavigateForward", typeof(bool), typeof(FileDialog), new PropertyMetadata(false));
+        public bool CanNavigateForward
+        {
+            get { return (bool)GetValue(CanNavigateForwardProperty); }
+            set { SetValue(CanNavigateForwardProperty, value); }
+        }
+
+        public static readonly DependencyProperty CanNavigateUpProperty
+            = DependencyProperty.Register("CanNavigateUp", typeof(bool), typeof(FileDialog), new PropertyMetadata(false));
+        public bool CanNavigateUp
+        {
+            get { return (bool)GetValue(CanNavigateUpProperty); }
+            set { SetValue(CanNavigateUpProperty, value); }
         }
 
         /// <summary>
@@ -157,9 +182,66 @@ namespace OneFilePicker.Picker
             Filters = filters.ToArray();
         }
 
+        private readonly IList<string[]> _history = new List<string[]>();
+        private int _historyIndex;
+
+        private void SelectNode(string[] path)
+        {
+            var items = NodeTree.Items;
+            TreeViewItem item = null;
+            var containerGenerator = NodeTree.ItemContainerGenerator;
+            foreach (var pathPart in path)
+            {
+                var node = items.Cast<INode>().SingleOrDefault(i => i.Name == pathPart);
+                if (node == null)
+                    break;
+                item = (TreeViewItem)containerGenerator.ContainerFromItem(node);
+                containerGenerator = item.ItemContainerGenerator;
+                item.IsExpanded = true;
+                items = item.Items;
+            }
+            if (item != null)
+                item.IsSelected = true;
+        }
+
         private void OnSelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
             SelectedFolder = (INode)((TreeView)sender).SelectedItem;
+            _history.Add(SelectedFolder.GetPath());
+            _historyIndex = _history.Count - 1;
+            UpdateCanNavigate();
+        }
+
+        private void UpdateCanNavigate()
+        {
+            CanNavigateBack = _historyIndex > 0;
+            CanNavigateForward = _historyIndex < _history.Count - 1;
+        }
+
+        private void NavigateBack(object sender, RoutedEventArgs e)
+        {
+            SelectNode(_history[--_historyIndex]);
+            UpdateCanNavigate();
+        }
+
+        private void NavigateForward(object sender, RoutedEventArgs e)
+        {
+            SelectNode(_history[++_historyIndex]);
+            UpdateCanNavigate();
+        }
+
+        private void NavigateUp(object sender, RoutedEventArgs e)
+        {
+        }
+
+        private void Refresh(object sender, RoutedEventArgs e)
+        {
+            GetBindingExpression(SelectedFolderProperty).UpdateSource();
+        }
+
+        private void OnSelectedFolderChanged()
+        {
+
         }
     }
 }

@@ -18,6 +18,8 @@ namespace OneFilePicker.File
     /// </summary>
     public class RootNode : INode
     {
+        public INode Parent { get { return null; } }
+
         public INode[] Children { get; private set; }
 
         public INode[] FolderChildren { get { return Children != null ? Children.Where(c => c.IsFolder).ToArray() : null; } }
@@ -26,15 +28,11 @@ namespace OneFilePicker.File
 
         public bool IsFolder { get { return true; } }
 
+        public string Name { get { return ""; } }
+
         public string DisplayName { get; private set; }
 
-        public string Path
-        {
-            get
-            {
-                return "";
-            }
-        }
+        public string Path { get { return ""; } }
 
         public DateTime LastWriteTime
         {
@@ -53,7 +51,7 @@ namespace OneFilePicker.File
 
         public RootNode()
         {
-            Children = DriveInfo.GetDrives().Select(d => (INode)new FileNode(d.Name, d.Name)).ToArray();
+            Children = DriveInfo.GetDrives().Select(d => (INode)new FileNode(this, d.Name, d.Name, d.Name)).ToArray();
             Icon = ImageLoader.GetComputerImage(true);
             DisplayName = "Computer";
         }

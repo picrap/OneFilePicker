@@ -16,6 +16,13 @@ namespace OneFilePicker.Picker
     public interface INode
     {
         /// <summary>
+        /// Gets the parent.
+        /// </summary>
+        /// <value>
+        /// The parent.
+        /// </value>
+        INode Parent { get; }
+        /// <summary>
         /// Gets the children.
         /// </summary>
         /// <value>
@@ -44,6 +51,13 @@ namespace OneFilePicker.Picker
         /// </value>
         bool IsFolder { get; }
         /// <summary>
+        /// Gets the name.
+        /// </summary>
+        /// <value>
+        /// The name.
+        /// </value>
+        string Name { get; }
+        /// <summary>
         /// Gets the display name.
         /// </summary>
         /// <value>
@@ -57,7 +71,6 @@ namespace OneFilePicker.Picker
         /// The path.
         /// </value>
         string Path { get; }
-
         /// <summary>
         /// Gets the last write time.
         /// </summary>

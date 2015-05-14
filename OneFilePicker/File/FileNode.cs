@@ -16,6 +16,9 @@ namespace OneFilePicker.File
     public class FileNode : INode
     {
         private INode[] _children;
+
+        public INode Parent { get; private set; }
+
         public INode[] Children
         {
             get
@@ -47,7 +50,8 @@ namespace OneFilePicker.File
 
         private INode CreateChild(string path)
         {
-            return new FileNode(path);
+            var name = System.IO.Path.GetFileName(path);
+            return new FileNode(this, path, name);
         }
 
         public INode[] FolderChildren
@@ -68,6 +72,8 @@ namespace OneFilePicker.File
 
         public bool IsFolder { get; private set; }
 
+        public string Name { get; private set; }
+
         public string DisplayName { get; private set; }
 
         public string Path { get; private set; }
@@ -79,13 +85,17 @@ namespace OneFilePicker.File
         public long? LengthKB { get; private set; }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="FileNode"/> class.
+        /// Initializes a new instance of the <see cref="FileNode" /> class.
         /// </summary>
+        /// <param name="parent">The parent.</param>
         /// <param name="path">The path.</param>
+        /// <param name="name">The name.</param>
         /// <param name="displayName">The display name.</param>
-        public FileNode(string path, string displayName = null)
+        public FileNode(INode parent, string path, string name, string displayName = null)
         {
+            Parent = parent;
             Path = path;
+            Name = name;
             DisplayName = displayName ?? System.IO.Path.GetFileName(path);
             DisplayType = ImageLoader.GetFileType(path);
             IsFolder = Directory.Exists(path);
