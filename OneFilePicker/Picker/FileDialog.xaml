@@ -47,7 +47,7 @@
             <Button Grid.Column="2" Margin="0,0,8,0" IsEnabled="{Binding CanNavigateUp, Mode=OneWay, ElementName=This}" Click="NavigateUp">
                 <icons:UpIcon Height="20" Width="20"/>
             </Button>
-            <TextBox Grid.Column="3" Margin="0,0,2,0"/>
+            <TextBox x:Name="Location" Grid.Column="3" Margin="1,0" KeyUp="OnLocationKeyUp" VerticalContentAlignment="Center" />
             <Button Grid.Column="4" Click="Refresh">
                 <icons:RefreshIcon Height="20" Width="20" />
             </Button>

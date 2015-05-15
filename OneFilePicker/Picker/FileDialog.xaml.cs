@@ -278,6 +278,7 @@ namespace OneFilePicker.Picker
         {
             if (_selectingNode)
                 return;
+            Location.Text = SelectedFolder.Path;
             UpdateHistory();
             CheckSelectedNode();
             UpdateCanNavigate();
@@ -305,7 +306,11 @@ namespace OneFilePicker.Picker
 
                     var item = (TreeViewItem)containerGenerator.ContainerFromItem(node);
                     if (!isLast)
+                    {
                         item.IsExpanded = true;
+                        item.ApplyTemplate();
+                        item.UpdateLayout();
+                    }
                     else
                         item.IsSelected = true;
 
@@ -339,6 +344,21 @@ namespace OneFilePicker.Picker
             CanNavigateBack = _historyIndex > 0;
             CanNavigateForward = _historyIndex < _history.Count - 1;
             CanNavigateUp = SelectedFolder != null && SelectedFolder.Parent != null;
+        }
+
+        private void OnLocationKeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Return || e.Key == Key.Enter)
+            {
+                var node = NodeProvider.Find(Location.Text);
+                if (node != null)
+                {
+                    if (!node.IsFolder)
+                        node = node.Parent;
+                    SelectedFolder = node;
+                }
+                Location.SelectAll();
+            }
         }
     }
 }
