@@ -366,6 +366,11 @@ namespace OneFilePicker.Picker
             }
         }
 
+        /// <summary>
+        /// Called when selection in FilesList has changed.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="SelectionChangedEventArgs"/> instance containing the event data.</param>
         private void OnFilesListSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             var selectedNode = (INode)FilesList.SelectedItem;
@@ -374,6 +379,11 @@ namespace OneFilePicker.Picker
             Selection.Text = selectedNode.Name;
         }
 
+        /// <summary>
+        /// Called when double-click occurred in FilesList.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="MouseButtonEventArgs"/> instance containing the event data.</param>
         private void OnFilesListDoubleClick(object sender, MouseButtonEventArgs e)
         {
             var selectedNode = (INode)FilesList.SelectedItem;
