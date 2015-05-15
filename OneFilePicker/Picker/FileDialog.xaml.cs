@@ -198,6 +198,11 @@ namespace OneFilePicker.Picker
         // so all combined:
         // source NodeTree.SelectedItem or History --> SelectedFolder --> [History] --> check for NodeTree.SelectedItem --> Binding to list view
 
+        /// <summary>
+        /// Navigates back.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="RoutedEventArgs"/> instance containing the event data.</param>
         private void NavigateBack(object sender, RoutedEventArgs e)
         {
             if (_historyIndex < 0)
@@ -205,11 +210,20 @@ namespace OneFilePicker.Picker
             NoHistory(() => SelectedFolder = _history[--_historyIndex]);
         }
 
+        /// <summary>
+        /// Navigates forward.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="RoutedEventArgs"/> instance containing the event data.</param>
         private void NavigateForward(object sender, RoutedEventArgs e)
         {
             NoHistory(() => SelectedFolder = _history[++_historyIndex]);
         }
 
+        /// <summary>
+        /// Invokes the action without updating the history.
+        /// </summary>
+        /// <param name="action">The action.</param>
         private void NoHistory(Action action)
         {
             try
@@ -223,6 +237,11 @@ namespace OneFilePicker.Picker
             }
         }
 
+        /// <summary>
+        /// Navigates up.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="RoutedEventArgs"/> instance containing the event data.</param>
         private void NavigateUp(object sender, RoutedEventArgs e)
         {
             if (SelectedFolder == null || SelectedFolder.Parent == null)
@@ -230,6 +249,11 @@ namespace OneFilePicker.Picker
             SelectedFolder = SelectedFolder.Parent;
         }
 
+        /// <summary>
+        /// Refreshes the view.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="RoutedEventArgs"/> instance containing the event data.</param>
         private void Refresh(object sender, RoutedEventArgs e)
         {
             var bindingExpression = FilesList.GetBindingExpression(ItemsControl.ItemsSourceProperty);
@@ -237,11 +261,19 @@ namespace OneFilePicker.Picker
                 bindingExpression.UpdateTarget();
         }
 
+        /// <summary>
+        /// Called when treeview selected item changed.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="object"/> instance containing the event data.</param>
         private void OnSelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
             SelectedFolder = (INode)NodeTree.SelectedItem;
         }
 
+        /// <summary>
+        /// Called when <see cref="SelectedFolder"/> has changed.
+        /// </summary>
         private void OnSelectedFolderChanged()
         {
             if (_selectingNode)
@@ -251,6 +283,9 @@ namespace OneFilePicker.Picker
             UpdateCanNavigate();
         }
 
+        /// <summary>
+        /// Checks if tree node matches the <see cref="SelectedFolder"/>.
+        /// </summary>
         private void CheckSelectedNode()
         {
             if (SelectedFolder == null || (NodeTree.SelectedItem != null && (SelectedFolder.Path == ((INode)NodeTree.SelectedItem).Path)))
@@ -284,6 +319,9 @@ namespace OneFilePicker.Picker
             }
         }
 
+        /// <summary>
+        /// Updates the history (records the current position).
+        /// </summary>
         private void UpdateHistory()
         {
             if (_updatingHistory)
@@ -293,6 +331,9 @@ namespace OneFilePicker.Picker
             _history.Insert(++_historyIndex, SelectedFolder);
         }
 
+        /// <summary>
+        /// Updates the can navigate flags.
+        /// </summary>
         private void UpdateCanNavigate()
         {
             CanNavigateBack = _historyIndex > 0;
