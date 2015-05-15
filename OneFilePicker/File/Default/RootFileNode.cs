@@ -24,7 +24,10 @@ namespace OneFilePicker.File.Default
         {
             get
             {
-                return DriveInfo.GetDrives().Select(d => (INode)new FileNode(this, d.Name, d.Name, d.Name)).ToArray();
+                return (from driveInfo in DriveInfo.GetDrives()
+                        let name = driveInfo.Name.TrimEnd('\\')
+                        select (INode)new FileNode(this, name, name, name))
+                        .ToArray();
             }
         }
 

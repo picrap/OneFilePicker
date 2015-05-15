@@ -27,7 +27,7 @@ namespace OneFilePicker.File.Default
                 {
                     try
                     {
-                        children = Directory.EnumerateFileSystemEntries(Path).Where(IsVisible).Select(CreateChild).ToArray();
+                        children = Directory.EnumerateFileSystemEntries(Path + @"\").Where(IsVisible).Select(CreateChild).ToArray();
                     }
                     catch (UnauthorizedAccessException)
                     { }

@@ -39,7 +39,7 @@ namespace OneFilePicker.File.Default
             INode node = null;
             foreach (var pathPart in pathParts)
             {
-                node = nodes.SingleOrDefault(n => n.Name == pathPart);
+                node = nodes.SingleOrDefault(n => string.Equals(n.Name, pathPart, StringComparison.InvariantCultureIgnoreCase));
                 if (node == null)
                     return null;
                 nodes = node.Children;

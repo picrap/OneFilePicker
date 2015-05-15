@@ -75,7 +75,7 @@
                 </TreeView.ItemTemplate>
             </TreeView>
             <ListView Grid.Column="1" x:Name="FilesList" BorderThickness="0" ItemsSource="{Binding SelectedFolder.Children, ElementName=This}"
-				util:GridViewSort.AutoSort="True">
+				util:GridViewSort.AutoSort="True" SelectionChanged="OnFilesListSelectionChanged" MouseDoubleClick="OnFilesListDoubleClick">
                 <ListView.View>
                     <GridView>
                         <GridViewColumn Header="Name" Width="200" HeaderContainerStyle="{StaticResource LeftColumnHeader}" 
@@ -108,7 +108,7 @@
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
             <TextBlock Grid.Column="0" Text="{Binding FileNameLabel, ElementName=This}"/>
-            <TextBox Grid.Column="1" Text="{Binding FileName, ElementName=This}" Margin="{DynamicResource LeftMargin}" />
+            <TextBox Grid.Column="1" x:Name="Selection" Text="{Binding FileName, ElementName=This}" Margin="{DynamicResource LeftMargin}" />
             <ComboBox Grid.Column="2" ItemsSource="{Binding Filters, ElementName=This}" DisplayMemberPath="Display" SelectedIndex="{Binding FilterIndex, ElementName=This}" Margin="{DynamicResource LeftMargin}" />
         </Grid>
 

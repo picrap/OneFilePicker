@@ -346,6 +346,11 @@ namespace OneFilePicker.Picker
             CanNavigateUp = SelectedFolder != null && SelectedFolder.Parent != null;
         }
 
+        /// <summary>
+        /// Called when Key Up in Location TextBox.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="KeyEventArgs"/> instance containing the event data.</param>
         private void OnLocationKeyUp(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Return || e.Key == Key.Enter)
@@ -359,6 +364,23 @@ namespace OneFilePicker.Picker
                 }
                 Location.SelectAll();
             }
+        }
+
+        private void OnFilesListSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            var selectedNode = (INode)FilesList.SelectedItem;
+            if (selectedNode == null)
+                return;
+            Selection.Text = selectedNode.Name;
+        }
+
+        private void OnFilesListDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            var selectedNode = (INode)FilesList.SelectedItem;
+            if (selectedNode == null)
+                return;
+            if (selectedNode.IsFolder)
+                SelectedFolder = selectedNode;
         }
     }
 }
