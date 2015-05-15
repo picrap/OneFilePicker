@@ -188,8 +188,8 @@ namespace OneFilePicker.Picker
         private readonly IList<INode> _history = new List<INode>();
         // index points at the current node
         private int _historyIndex = -1;
-        private bool _selectingNode = false;
-        private bool _updatingHistory = false;
+        private bool _selectingNode;
+        private bool _updatingHistory;
 
         // workflow:
         // NodeTree.SelectedItem --> SelectedFolder --> History --> check for NodeTree.SelectedItem --> Binding to list view
