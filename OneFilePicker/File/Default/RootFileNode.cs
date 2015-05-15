@@ -5,7 +5,7 @@
 // Released under MIT license http://opensource.org/licenses/mit-license.php
 #endregion
 
-namespace OneFilePicker.File
+namespace OneFilePicker.File.Default
 {
     using System;
     using System.IO;
@@ -16,11 +16,17 @@ namespace OneFilePicker.File
     /// <summary>
     /// This is the default when no custom INode is provided to <see cref="FileDialog"/>.
     /// </summary>
-    public class RootNode : INode
+    public class RootFileNode : INode
     {
         public INode Parent { get { return null; } }
 
-        public INode[] Children { get; private set; }
+        public INode[] Children
+        {
+            get
+            {
+                return DriveInfo.GetDrives().Select(d => (INode)new FileNode(this, d.Name, d.Name, d.Name)).ToArray();
+            }
+        }
 
         public INode[] FolderChildren { get { return Children != null ? Children.Where(c => c.IsFolder).ToArray() : null; } }
 
@@ -49,9 +55,8 @@ namespace OneFilePicker.File
             get { return null; }
         }
 
-        public RootNode()
+        public RootFileNode()
         {
-            Children = DriveInfo.GetDrives().Select(d => (INode)new FileNode(this, d.Name, d.Name, d.Name)).ToArray();
             Icon = ImageLoader.GetComputerImage(true);
             DisplayName = "Computer";
         }

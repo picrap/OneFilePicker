@@ -5,7 +5,7 @@
 // Released under MIT license http://opensource.org/licenses/mit-license.php
 #endregion
 
-namespace OneFilePicker.File
+namespace OneFilePicker.File.Default
 {
     using System;
     using System.Runtime.InteropServices;
@@ -25,7 +25,7 @@ namespace OneFilePicker.File
             public string szTypeName;
         };
 
-        internal class Win32
+        internal static class Win32
         {
             public const uint FILE_ATTRIBUTE_NORMAL = 0x80;
             public const uint FILE_ATTRIBUTE_DIRECTORY = 0x10;

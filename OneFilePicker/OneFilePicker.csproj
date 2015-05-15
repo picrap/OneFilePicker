@@ -48,10 +48,11 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="File\FileNode.cs" />
-    <Compile Include="File\ImageLoader.cs" />
-    <Compile Include="File\ImageLoader.Interop.cs" />
-    <Compile Include="File\RootNode.cs" />
+    <Compile Include="File\Default\FileNode.cs" />
+    <Compile Include="File\Default\FileNodeProvider.cs" />
+    <Compile Include="File\Default\ImageLoader.cs" />
+    <Compile Include="File\Default\ImageLoader.Interop.cs" />
+    <Compile Include="File\Default\RootFileNode.cs" />
     <Compile Include="Icons\BackIcon.xaml.cs">
       <DependentUpon>BackIcon.xaml</DependentUpon>
     </Compile>
@@ -69,7 +70,8 @@
     </Compile>
     <Compile Include="Picker\Filter.cs" />
     <Compile Include="Picker\GridViewSort.cs" />
-    <Compile Include="Picker\INode.cs" />
+    <Compile Include="File\INode.cs" />
+    <Compile Include="File\INodeProvider.cs" />
     <Compile Include="Picker\NodeExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>

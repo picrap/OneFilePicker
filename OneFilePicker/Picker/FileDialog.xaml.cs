@@ -7,12 +7,14 @@
 
 namespace OneFilePicker.Picker
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Windows;
     using System.Windows.Controls;
     using System.Windows.Input;
     using File;
+    using File.Default;
 
     public partial class FileDialog
     {
@@ -26,7 +28,7 @@ namespace OneFilePicker.Picker
         }
 
         public static readonly DependencyProperty FileNameProperty = DependencyProperty.Register(
-            "FileName", typeof(string), typeof(FileDialog), new PropertyMetadata(default(string)));
+            "FileName", typeof(string), typeof(FileDialog));
 
         public string FileName
         {
@@ -53,7 +55,7 @@ namespace OneFilePicker.Picker
         }
 
         public static readonly DependencyProperty FiltersProperty = DependencyProperty.Register(
-            "Filters", typeof(Filter[]), typeof(FileDialog), new PropertyMetadata(default(Filter[])));
+            "Filters", typeof(Filter[]), typeof(FileDialog));
 
         public Filter[] Filters
         {
@@ -71,7 +73,7 @@ namespace OneFilePicker.Picker
         }
 
         public static readonly DependencyProperty SelectProperty = DependencyProperty.Register(
-            "Select", typeof(ICommand), typeof(FileDialog), new PropertyMetadata(default(ICommand)));
+            "Select", typeof(ICommand), typeof(FileDialog));
 
         public ICommand Select
         {
@@ -89,7 +91,7 @@ namespace OneFilePicker.Picker
         }
 
         public static readonly DependencyProperty CancelProperty = DependencyProperty.Register(
-            "Cancel", typeof(ICommand), typeof(FileDialog), new PropertyMetadata(default(ICommand)));
+            "Cancel", typeof(ICommand), typeof(FileDialog));
 
         public ICommand Cancel
         {
@@ -97,13 +99,13 @@ namespace OneFilePicker.Picker
             set { SetValue(CancelProperty, value); }
         }
 
-        public static readonly DependencyProperty RootNodesProperty = DependencyProperty.Register(
-            "RootNodes", typeof(INode[]), typeof(FileDialog), new PropertyMetadata(new INode[] { new RootNode() }));
+        public static readonly DependencyProperty NodeProviderProperty = DependencyProperty.Register(
+            "NodeProvider", typeof(INodeProvider), typeof(FileDialog), new PropertyMetadata(new FileNodeProvider()));
 
-        public INode[] RootNodes
+        public INodeProvider NodeProvider
         {
-            get { return (INode[])GetValue(RootNodesProperty); }
-            set { SetValue(RootNodesProperty, value); }
+            get { return (INodeProvider)GetValue(NodeProviderProperty); }
+            set { SetValue(NodeProviderProperty, value); }
         }
 
         public static readonly DependencyProperty SelectedFolderProperty
@@ -182,66 +184,120 @@ namespace OneFilePicker.Picker
             Filters = filters.ToArray();
         }
 
-        private readonly IList<string[]> _history = new List<string[]>();
-        private int _historyIndex;
+        // history of selected nodes
+        private readonly IList<INode> _history = new List<INode>();
+        // index points at the current node
+        private int _historyIndex = -1;
+        private bool _selectingNode = false;
+        private bool _updatingHistory = false;
 
-        private void SelectNode(string[] path)
+        // workflow:
+        // NodeTree.SelectedItem --> SelectedFolder --> History --> check for NodeTree.SelectedItem --> Binding to list view
+        // if origin is history:
+        // History --> SelectedFolder --> check for NodeTree.SelectedItem --> Binding to list view
+        // so all combined:
+        // source NodeTree.SelectedItem or History --> SelectedFolder --> [History] --> check for NodeTree.SelectedItem --> Binding to list view
+
+        private void NavigateBack(object sender, RoutedEventArgs e)
         {
-            var items = NodeTree.Items;
-            TreeViewItem item = null;
-            var containerGenerator = NodeTree.ItemContainerGenerator;
-            foreach (var pathPart in path)
+            if (_historyIndex < 0)
+                return;
+            NoHistory(() => SelectedFolder = _history[--_historyIndex]);
+        }
+
+        private void NavigateForward(object sender, RoutedEventArgs e)
+        {
+            NoHistory(() => SelectedFolder = _history[++_historyIndex]);
+        }
+
+        private void NoHistory(Action action)
+        {
+            try
             {
-                var node = items.Cast<INode>().SingleOrDefault(i => i.Name == pathPart);
-                if (node == null)
-                    break;
-                item = (TreeViewItem)containerGenerator.ContainerFromItem(node);
-                containerGenerator = item.ItemContainerGenerator;
-                item.IsExpanded = true;
-                items = item.Items;
+                _updatingHistory = true;
+                action();
             }
-            if (item != null)
-                item.IsSelected = true;
+            finally
+            {
+                _updatingHistory = false;
+            }
+        }
+
+        private void NavigateUp(object sender, RoutedEventArgs e)
+        {
+            if (SelectedFolder == null || SelectedFolder.Parent == null)
+                return;
+            SelectedFolder = SelectedFolder.Parent;
+        }
+
+        private void Refresh(object sender, RoutedEventArgs e)
+        {
+            var bindingExpression = FilesList.GetBindingExpression(ItemsControl.ItemsSourceProperty);
+            if (bindingExpression != null)
+                bindingExpression.UpdateTarget();
         }
 
         private void OnSelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
-            SelectedFolder = (INode)((TreeView)sender).SelectedItem;
-            _history.Add(SelectedFolder.GetPath());
-            _historyIndex = _history.Count - 1;
+            SelectedFolder = (INode)NodeTree.SelectedItem;
+        }
+
+        private void OnSelectedFolderChanged()
+        {
+            if (_selectingNode)
+                return;
+            UpdateHistory();
+            CheckSelectedNode();
             UpdateCanNavigate();
+        }
+
+        private void CheckSelectedNode()
+        {
+            if (SelectedFolder == null || (NodeTree.SelectedItem != null && (SelectedFolder.Path == ((INode)NodeTree.SelectedItem).Path)))
+                return;
+            try
+            {
+                _selectingNode = true;
+                var items = NodeTree.Items;
+                var containerGenerator = NodeTree.ItemContainerGenerator;
+                var path = SelectedFolder.GetPath();
+                for (int partIndex = 0; partIndex < path.Length; partIndex++)
+                {
+                    bool isLast = partIndex == path.Length - 1;
+                    var node = items.Cast<INode>().SingleOrDefault(i => i.Name == path[partIndex]);
+                    if (node == null)
+                        break;
+
+                    var item = (TreeViewItem)containerGenerator.ContainerFromItem(node);
+                    if (!isLast)
+                        item.IsExpanded = true;
+                    else
+                        item.IsSelected = true;
+
+                    containerGenerator = item.ItemContainerGenerator;
+                    items = item.Items;
+                }
+            }
+            finally
+            {
+                _selectingNode = false;
+            }
+        }
+
+        private void UpdateHistory()
+        {
+            if (_updatingHistory)
+                return;
+            while (_history.Count > _historyIndex + 1)
+                _history.RemoveAt(_historyIndex + 1);
+            _history.Insert(++_historyIndex, SelectedFolder);
         }
 
         private void UpdateCanNavigate()
         {
             CanNavigateBack = _historyIndex > 0;
             CanNavigateForward = _historyIndex < _history.Count - 1;
-        }
-
-        private void NavigateBack(object sender, RoutedEventArgs e)
-        {
-            SelectNode(_history[--_historyIndex]);
-            UpdateCanNavigate();
-        }
-
-        private void NavigateForward(object sender, RoutedEventArgs e)
-        {
-            SelectNode(_history[++_historyIndex]);
-            UpdateCanNavigate();
-        }
-
-        private void NavigateUp(object sender, RoutedEventArgs e)
-        {
-        }
-
-        private void Refresh(object sender, RoutedEventArgs e)
-        {
-            GetBindingExpression(SelectedFolderProperty).UpdateSource();
-        }
-
-        private void OnSelectedFolderChanged()
-        {
-
+            CanNavigateUp = SelectedFolder != null && SelectedFolder.Parent != null;
         }
     }
 }

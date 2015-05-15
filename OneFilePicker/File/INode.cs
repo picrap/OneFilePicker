@@ -5,7 +5,7 @@
 // Released under MIT license http://opensource.org/licenses/mit-license.php
 #endregion
 
-namespace OneFilePicker.Picker
+namespace OneFilePicker.File
 {
     using System;
     using System.Windows.Media;

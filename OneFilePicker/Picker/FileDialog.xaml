@@ -6,7 +6,9 @@
              xmlns:picker="clr-namespace:OneFilePicker.Picker"
              xmlns:util="clr-namespace:Wpf.Util"
              xmlns:icons="clr-namespace:OneFilePicker.Icons"
-             xmlns:Themes="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Aero" x:Class="OneFilePicker.Picker.FileDialog"
+             xmlns:Themes="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Aero"
+             xmlns:file="clr-namespace:OneFilePicker.File"
+             x:Class="OneFilePicker.Picker.FileDialog"
              mc:Ignorable="d" 
              d:DesignHeight="400" d:DesignWidth="800" x:Name="This" >
 
@@ -109,10 +111,10 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
             <GridSplitter Width="5" ShowsPreview="True" />
-            <TreeView Grid.Column="0" x:Name="NodeTree" ItemsSource="{Binding RootNodes, ElementName=This}" Margin="0,0,5,0" BorderThickness="0" 
+            <TreeView Grid.Column="0" x:Name="NodeTree" ItemsSource="{Binding NodeProvider.Root, ElementName=This}" Margin="0,0,5,0" BorderThickness="0" 
 				SelectedItemChanged="OnSelectedItemChanged">
                 <TreeView.ItemTemplate>
-                    <HierarchicalDataTemplate DataType="picker:INode" ItemsSource="{Binding FolderChildren}"  >
+                    <HierarchicalDataTemplate DataType="file:INode" ItemsSource="{Binding FolderChildren}"  >
                         <StackPanel Orientation="Horizontal" Margin="0,2">
                             <Image Source="{Binding Icon}" Stretch="UniformToFill" Height="16" />
                             <TextBlock Text="{Binding DisplayName}" Margin="{DynamicResource LeftMargin}" />
@@ -127,7 +129,7 @@
                         <GridViewColumn Header="Name" Width="200" HeaderContainerStyle="{StaticResource LeftColumnHeader}" 
 							util:GridViewSort.PropertyName="~IsFolder,DisplayName" util:GridViewSort.DefaultSort="True" >
                             <GridViewColumn.CellTemplate>
-                                <DataTemplate DataType="picker:INode">
+                                <DataTemplate DataType="file:INode">
                                     <StackPanel Orientation="Horizontal">
                                         <Image Source="{Binding Icon}" Stretch="UniformToFill" Height="16" />
                                         <TextBlock Text="{Binding DisplayName}" Margin="{DynamicResource LeftMargin}" />

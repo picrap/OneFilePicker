@@ -1,5 +1,11 @@
-﻿
-namespace OneFilePicker.File
+﻿#region OneFilePicker
+// OneFilePicker
+// Abstract (extensible) file picker
+// https://github.com/picrap/OneFilePicker
+// Released under MIT license http://opensource.org/licenses/mit-license.php
+#endregion
+
+namespace OneFilePicker.File.Default
 {
     using System;
     using System.Collections.Generic;
