@@ -391,6 +391,11 @@ namespace OneFilePicker.Picker
                 return;
             if (selectedNode.IsFolder)
                 SelectedFolder = selectedNode;
+            else
+            {
+                if (Select != null && Select.CanExecute(selectedNode))
+                    Select.Execute(selectedNode);
+            }
         }
     }
 }
