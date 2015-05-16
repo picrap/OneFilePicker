@@ -110,12 +110,22 @@ namespace OneFilePicker.Picker
 
         public static readonly DependencyProperty SelectedFolderProperty
             = DependencyProperty.Register("SelectedFolder", typeof(INode), typeof(FileDialog),
-                new PropertyMetadata(null, (d, e) => { ((FileDialog)d).OnSelectedFolderChanged(); }));
+                new PropertyMetadata(null, (d, e) => ((FileDialog)d).OnSelectedFolderChanged()));
 
         public INode SelectedFolder
         {
             get { return (INode)GetValue(SelectedFolderProperty); }
             set { SetValue(SelectedFolderProperty, value); }
+        }
+
+        public static readonly DependencyProperty SelectedFolderPathProperty = DependencyProperty.Register(
+            "SelectedFolderPath", typeof(string), typeof(FileDialog),
+            new PropertyMetadata(null, (d, e) => ((FileDialog)d).OnSelectedFolderPathChanged()));
+
+        public string SelectedFolderPath
+        {
+            get { return (string)GetValue(SelectedFolderPathProperty); }
+            set { SetValue(SelectedFolderPathProperty, value); }
         }
 
         public static readonly DependencyProperty CanNavigateBackProperty
@@ -159,6 +169,7 @@ namespace OneFilePicker.Picker
         private void OnLoaded(object sender, RoutedEventArgs e)
         {
             OnFilterChanged();
+            OnSelectedFolderPathChanged();
         }
 
         /// <summary>
@@ -279,6 +290,7 @@ namespace OneFilePicker.Picker
             if (_selectingNode)
                 return;
             Location.Text = SelectedFolder.Path;
+            SelectedFolderPath = SelectedFolder.Path;
             UpdateHistory();
             CheckSelectedNode();
             UpdateCanNavigate();
@@ -396,6 +408,25 @@ namespace OneFilePicker.Picker
                 if (Select != null && Select.CanExecute(selectedNode))
                     Select.Execute(selectedNode);
             }
+        }
+
+        /// <summary>
+        /// Called when SelectedFolderPath changed.
+        /// </summary>
+        private void OnSelectedFolderPathChanged()
+        {
+            if (!IsLoaded)
+                return;
+
+            // when set to null, we don't go further
+            if (SelectedFolderPath == null)
+                return;
+
+            // if the selected folder already matches this path, there is nothing to do
+            if (SelectedFolder != null && SelectedFolder.Path == SelectedFolderPath)
+                return;
+
+            SelectedFolder = NodeProvider.Find(SelectedFolderPath);
         }
     }
 }
