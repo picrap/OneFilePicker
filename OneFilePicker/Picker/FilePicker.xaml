@@ -6,7 +6,8 @@
              xmlns:util="clr-namespace:Wpf.Util"
              xmlns:icons="clr-namespace:OneFilePicker.Icons"
              xmlns:file="clr-namespace:OneFilePicker.File"
-             x:Class="OneFilePicker.Picker.FileDialog"
+             xmlns:picker="clr-namespace:OneFilePicker.Picker"
+             x:Class="OneFilePicker.Picker.FilePicker"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="800" x:Name="This" >
 
@@ -60,17 +61,23 @@
                 <ColumnDefinition Width="200"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <GridSplitter Width="5" ShowsPreview="True" />
-            <TreeView Grid.Column="0" x:Name="NodeTree" ItemsSource="{Binding NodeProvider.Root, ElementName=This}" Margin="0,0,5,0" BorderThickness="0" 
-				SelectedItemChanged="OnSelectedItemChanged">
+            <GridSplitter x:Name="Splitter" Width="5" ShowsPreview="True" />
+            <TreeView Grid.Column="0" x:Name="NodeTree" ItemsSource="{Binding RootNodes, ElementName=This}" Margin="0,0,5,0" BorderThickness="0" 
+				SelectedItemChanged="OnSelectedItemChanged" d:DataContext="{d:DesignInstance picker:TreeViewNode}">
                 <TreeView.ItemTemplate>
-                    <HierarchicalDataTemplate DataType="file:INode" ItemsSource="{Binding FolderChildren}"  >
+                    <HierarchicalDataTemplate DataType="picker:TreeViewNode" ItemsSource="{Binding FolderChildren}" >
                         <StackPanel Orientation="Horizontal" Margin="0,2">
-                            <Image Source="{Binding Icon}" Stretch="UniformToFill" Height="16" />
-                            <TextBlock Text="{Binding DisplayName}" Margin="{DynamicResource LeftMargin}" />
+                            <Image Source="{Binding Node.Icon}" Stretch="UniformToFill" Height="16" />
+                            <TextBlock Text="{Binding Node.DisplayName}" Margin="{DynamicResource LeftMargin}" />
                         </StackPanel>
                     </HierarchicalDataTemplate>
                 </TreeView.ItemTemplate>
+                <TreeView.ItemContainerStyle>
+                    <Style TargetType="TreeViewItem">
+                        <Setter Property="IsSelected" Value="{Binding IsSelected}" />
+                        <Setter Property="IsExpanded" Value="{Binding IsExpanded}" />
+                    </Style>
+                </TreeView.ItemContainerStyle>
             </TreeView>
             <ListView Grid.Column="1" x:Name="FilesList" BorderThickness="0" ItemsSource="{Binding SelectedFolder.Children, ElementName=This}"
 				util:GridViewSort.AutoSort="True" SelectionChanged="OnFilesListSelectionChanged" MouseDoubleClick="OnFilesListDoubleClick">

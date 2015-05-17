@@ -16,10 +16,10 @@ namespace OneFilePicker.Picker
     using File;
     using File.Default;
 
-    public partial class FileDialog
+    public partial class FilePicker
     {
         public static readonly DependencyProperty FileNameLabelProperty = DependencyProperty.Register(
-            "FileNameLabel", typeof(string), typeof(FileDialog), new PropertyMetadata("File name:"));
+            "FileNameLabel", typeof(string), typeof(FilePicker), new PropertyMetadata("File name:"));
 
         public string FileNameLabel
         {
@@ -28,7 +28,7 @@ namespace OneFilePicker.Picker
         }
 
         public static readonly DependencyProperty FileNameProperty = DependencyProperty.Register(
-            "FileName", typeof(string), typeof(FileDialog));
+            "FileName", typeof(string), typeof(FilePicker));
 
         public string FileName
         {
@@ -37,7 +37,7 @@ namespace OneFilePicker.Picker
         }
 
         public static readonly DependencyProperty FilterProperty = DependencyProperty.Register(
-            "Filter", typeof(string), typeof(FileDialog), new PropertyMetadata("All files|*.*", OnFilterChanged));
+            "Filter", typeof(string), typeof(FilePicker), new PropertyMetadata("All files|*.*", OnFilterChanged));
 
         public string Filter
         {
@@ -46,7 +46,7 @@ namespace OneFilePicker.Picker
         }
 
         public static readonly DependencyProperty FilterIndexProperty = DependencyProperty.Register(
-            "FilterIndex", typeof(int), typeof(FileDialog), new PropertyMetadata(default(int)));
+            "FilterIndex", typeof(int), typeof(FilePicker), new PropertyMetadata(default(int)));
 
         public int FilterIndex
         {
@@ -55,7 +55,7 @@ namespace OneFilePicker.Picker
         }
 
         public static readonly DependencyProperty FiltersProperty = DependencyProperty.Register(
-            "Filters", typeof(Filter[]), typeof(FileDialog));
+            "Filters", typeof(Filter[]), typeof(FilePicker));
 
         public Filter[] Filters
         {
@@ -64,7 +64,7 @@ namespace OneFilePicker.Picker
         }
 
         public static readonly DependencyProperty SelectTextProperty = DependencyProperty.Register(
-            "SelectText", typeof(string), typeof(FileDialog), new PropertyMetadata("Open"));
+            "SelectText", typeof(string), typeof(FilePicker), new PropertyMetadata("Open"));
 
         public string SelectText
         {
@@ -73,7 +73,7 @@ namespace OneFilePicker.Picker
         }
 
         public static readonly DependencyProperty SelectProperty = DependencyProperty.Register(
-            "Select", typeof(ICommand), typeof(FileDialog));
+            "Select", typeof(ICommand), typeof(FilePicker));
 
         public ICommand Select
         {
@@ -82,7 +82,7 @@ namespace OneFilePicker.Picker
         }
 
         public static readonly DependencyProperty CancelTextProperty = DependencyProperty.Register(
-            "CancelText", typeof(string), typeof(FileDialog), new PropertyMetadata("Cancel"));
+            "CancelText", typeof(string), typeof(FilePicker), new PropertyMetadata("Cancel"));
 
         public string CancelText
         {
@@ -91,7 +91,7 @@ namespace OneFilePicker.Picker
         }
 
         public static readonly DependencyProperty CancelProperty = DependencyProperty.Register(
-            "Cancel", typeof(ICommand), typeof(FileDialog));
+            "Cancel", typeof(ICommand), typeof(FilePicker));
 
         public ICommand Cancel
         {
@@ -100,7 +100,8 @@ namespace OneFilePicker.Picker
         }
 
         public static readonly DependencyProperty NodeProviderProperty = DependencyProperty.Register(
-            "NodeProvider", typeof(INodeProvider), typeof(FileDialog), new PropertyMetadata(new FileNodeProvider()));
+            "NodeProvider", typeof(INodeProvider), typeof(FilePicker),
+            new PropertyMetadata(null, (d, e) => ((FilePicker)d).OnNodeProviderChanged()));
 
         public INodeProvider NodeProvider
         {
@@ -108,9 +109,18 @@ namespace OneFilePicker.Picker
             set { SetValue(NodeProviderProperty, value); }
         }
 
+        public static readonly DependencyProperty RootNodesProperty = DependencyProperty.Register(
+            "RootNodes", typeof(TreeViewNode[]), typeof(FilePicker), new PropertyMetadata(default(TreeViewNode[])));
+
+        public TreeViewNode[] RootNodes
+        {
+            get { return (TreeViewNode[])GetValue(RootNodesProperty); }
+            set { SetValue(RootNodesProperty, value); }
+        }
+
         public static readonly DependencyProperty SelectedFolderProperty
-            = DependencyProperty.Register("SelectedFolder", typeof(INode), typeof(FileDialog),
-                new PropertyMetadata(null, (d, e) => ((FileDialog)d).OnSelectedFolderChanged()));
+            = DependencyProperty.Register("SelectedFolder", typeof(INode), typeof(FilePicker),
+                new PropertyMetadata(null, (d, e) => ((FilePicker)d).OnSelectedFolderChanged()));
 
         public INode SelectedFolder
         {
@@ -119,8 +129,8 @@ namespace OneFilePicker.Picker
         }
 
         public static readonly DependencyProperty SelectedFolderPathProperty = DependencyProperty.Register(
-            "SelectedFolderPath", typeof(string), typeof(FileDialog),
-            new PropertyMetadata(null, (d, e) => ((FileDialog)d).OnSelectedFolderPathChanged()));
+            "SelectedFolderPath", typeof(string), typeof(FilePicker),
+            new PropertyMetadata(null, (d, e) => ((FilePicker)d).OnSelectedFolderPathChanged()));
 
         public string SelectedFolderPath
         {
@@ -129,7 +139,8 @@ namespace OneFilePicker.Picker
         }
 
         public static readonly DependencyProperty CanNavigateBackProperty
-            = DependencyProperty.Register("CanNavigateBack", typeof(bool), typeof(FileDialog), new PropertyMetadata(false));
+            = DependencyProperty.Register("CanNavigateBack", typeof(bool), typeof(FilePicker), new PropertyMetadata(false));
+
         public bool CanNavigateBack
         {
             get { return (bool)GetValue(CanNavigateBackProperty); }
@@ -137,7 +148,7 @@ namespace OneFilePicker.Picker
         }
 
         public static readonly DependencyProperty CanNavigateForwardProperty
-            = DependencyProperty.Register("CanNavigateForward", typeof(bool), typeof(FileDialog), new PropertyMetadata(false));
+            = DependencyProperty.Register("CanNavigateForward", typeof(bool), typeof(FilePicker), new PropertyMetadata(false));
         public bool CanNavigateForward
         {
             get { return (bool)GetValue(CanNavigateForwardProperty); }
@@ -145,20 +156,37 @@ namespace OneFilePicker.Picker
         }
 
         public static readonly DependencyProperty CanNavigateUpProperty
-            = DependencyProperty.Register("CanNavigateUp", typeof(bool), typeof(FileDialog), new PropertyMetadata(false));
+            = DependencyProperty.Register("CanNavigateUp", typeof(bool), typeof(FilePicker), new PropertyMetadata(false));
+
         public bool CanNavigateUp
         {
             get { return (bool)GetValue(CanNavigateUpProperty); }
             set { SetValue(CanNavigateUpProperty, value); }
         }
 
+        public static readonly DependencyProperty ModeProperty = DependencyProperty.Register(
+            "Mode", typeof(FilePickerMode), typeof(FilePicker),
+            new PropertyMetadata(FilePickerMode.Default, (d, e) => ((FilePicker)d).OnModeChanged()));
+
+        public FilePickerMode Mode
+        {
+            get { return (FilePickerMode)GetValue(ModeProperty); }
+            set { SetValue(ModeProperty, value); }
+        }
+
+        private bool ShowFilesList
+        {
+            get { return Mode == FilePickerMode.Default; }
+        }
+
         /// <summary>
-        /// Initializes a new instance of the <see cref="FileDialog"/> class.
+        /// Initializes a new instance of the <see cref="FilePicker"/> class.
         /// </summary>
-        public FileDialog()
+        public FilePicker()
         {
             InitializeComponent();
             Loaded += OnLoaded;
+            NodeProvider = new FileNodeProvider();
         }
 
         /// <summary>
@@ -179,7 +207,7 @@ namespace OneFilePicker.Picker
         /// <param name="e">The <see cref="DependencyPropertyChangedEventArgs"/> instance containing the event data.</param>
         private static void OnFilterChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            var fileDialog = (FileDialog)d;
+            var fileDialog = (FilePicker)d;
             fileDialog.OnFilterChanged();
         }
 
@@ -267,9 +295,13 @@ namespace OneFilePicker.Picker
         /// <param name="e">The <see cref="RoutedEventArgs"/> instance containing the event data.</param>
         private void Refresh(object sender, RoutedEventArgs e)
         {
-            var bindingExpression = FilesList.GetBindingExpression(ItemsControl.ItemsSourceProperty);
-            if (bindingExpression != null)
-                bindingExpression.UpdateTarget();
+            var treeViewNode = (TreeViewNode)NodeTree.SelectedItem;
+            if (treeViewNode == null)
+                return;
+            treeViewNode.Refresh();
+            //var bindingExpression = FilesList.GetBindingExpression(ItemsControl.ItemsSourceProperty);
+            //if (bindingExpression != null)
+            //    bindingExpression.UpdateTarget();
         }
 
         /// <summary>
@@ -279,7 +311,7 @@ namespace OneFilePicker.Picker
         /// <param name="e">The <see cref="object"/> instance containing the event data.</param>
         private void OnSelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
-            SelectedFolder = (INode)NodeTree.SelectedItem;
+            SelectedFolder = ((TreeViewNode)NodeTree.SelectedItem).Node;
         }
 
         /// <summary>
@@ -301,33 +333,27 @@ namespace OneFilePicker.Picker
         /// </summary>
         private void CheckSelectedNode()
         {
-            if (SelectedFolder == null || (NodeTree.SelectedItem != null && (SelectedFolder.Path == ((INode)NodeTree.SelectedItem).Path)))
+            if (SelectedFolder == null ||
+                (NodeTree.SelectedItem != null && (SelectedFolder.Path == ((TreeViewNode)NodeTree.SelectedItem).Node.Path)))
                 return;
             try
             {
                 _selectingNode = true;
-                var items = NodeTree.Items;
-                var containerGenerator = NodeTree.ItemContainerGenerator;
+                var nodes = RootNodes;
                 var path = SelectedFolder.GetPath();
                 for (int partIndex = 0; partIndex < path.Length; partIndex++)
                 {
                     bool isLast = partIndex == path.Length - 1;
-                    var node = items.Cast<INode>().SingleOrDefault(i => i.Name == path[partIndex]);
+                    var node = nodes.SingleOrDefault(i => i.Node.Name == path[partIndex]);
                     if (node == null)
                         break;
 
-                    var item = (TreeViewItem)containerGenerator.ContainerFromItem(node);
                     if (!isLast)
-                    {
-                        item.IsExpanded = true;
-                        item.ApplyTemplate();
-                        item.UpdateLayout();
-                    }
+                        node.IsExpanded = true;
                     else
-                        item.IsSelected = true;
+                        node.IsSelected = true;
 
-                    containerGenerator = item.ItemContainerGenerator;
-                    items = item.Items;
+                    nodes = node.Children;
                 }
             }
             finally
@@ -428,5 +454,19 @@ namespace OneFilePicker.Picker
 
             SelectedFolder = NodeProvider.Find(SelectedFolderPath);
         }
+
+        private void OnModeChanged()
+        {
+            Splitter.Visibility = ShowFilesList ? Visibility.Visible : Visibility.Collapsed;
+            FilesList.Visibility = ShowFilesList ? Visibility.Visible : Visibility.Collapsed;
+        }
+
+        private readonly ISet<string> _isExpanded = new HashSet<string>();
+
+        private void OnNodeProviderChanged()
+        {
+            RootNodes = NodeProvider.Root.Select(n => new TreeViewNode(n, _isExpanded)).ToArray();
+        }
+
     }
 }

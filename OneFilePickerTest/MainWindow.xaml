@@ -3,5 +3,12 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:oneFilePicker="clr-namespace:OneFilePicker.Picker;assembly=OneFilePicker"
         Title="MainWindow" Height="550" Width="900">
-    <oneFilePicker:FileDialog Margin="8" SelectedFolderPath="c:\users"/>
+    <TabControl Margin="8">
+        <TabItem Header="Default">
+            <oneFilePicker:FilePicker SelectedFolderPath="c:\users" />
+        </TabItem>
+        <TabItem Header="Folders">
+            <oneFilePicker:FilePicker SelectedFolderPath="c:" />
+        </TabItem>
+    </TabControl>
 </Window>

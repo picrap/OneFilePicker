@@ -14,7 +14,7 @@ namespace OneFilePicker.File.Default
     using Picker;
 
     /// <summary>
-    /// This is the default when no custom INode is provided to <see cref="FileDialog"/>.
+    /// This is the default when no custom INode is provided to <see cref="FilePicker"/>.
     /// </summary>
     public class RootFileNode : INode
     {

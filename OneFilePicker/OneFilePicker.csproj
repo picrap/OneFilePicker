@@ -65,14 +65,17 @@
     <Compile Include="Icons\UpIcon.xaml.cs">
       <DependentUpon>UpIcon.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Picker\FileDialog.xaml.cs">
-      <DependentUpon>FileDialog.xaml</DependentUpon>
+    <Compile Include="Picker\FilePicker.xaml.cs">
+      <DependentUpon>FilePicker.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Picker\FilePickerMode.cs" />
     <Compile Include="Picker\Filter.cs" />
     <Compile Include="Picker\GridViewSort.cs" />
     <Compile Include="File\INode.cs" />
     <Compile Include="File\INodeProvider.cs" />
     <Compile Include="Picker\NodeExtensions.cs" />
+    <Compile Include="Picker\TreeViewNode.cs" />
+    <Compile Include="Properties\Annotations.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -95,7 +98,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Picker\FileDialog.xaml">
+    <Page Include="Picker\FilePicker.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
