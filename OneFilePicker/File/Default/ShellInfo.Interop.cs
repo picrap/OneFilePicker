@@ -10,7 +10,7 @@ namespace OneFilePicker.File.Default
     using System;
     using System.Runtime.InteropServices;
 
-    partial class ImageLoader
+    partial class ShellInfo
     {
         // http://support.microsoft.com/kb/319350
         [StructLayout(LayoutKind.Sequential)]
@@ -31,6 +31,7 @@ namespace OneFilePicker.File.Default
             public const uint FILE_ATTRIBUTE_DIRECTORY = 0x10;
             public const uint SHGFI_TYPENAME = 0x000000400;
             public const uint SHGFI_USEFILEATTRIBUTES = 0x000000010;
+            public const uint SHGFI_DISPLAYNAME = 0x000000200;
 
             internal const uint SHGFI_SYSICONINDEX = 0x000004000;
             internal const int ILD_TRANSPARENT = 0x1;

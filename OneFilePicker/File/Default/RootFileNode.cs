@@ -26,7 +26,8 @@ namespace OneFilePicker.File.Default
             {
                 return (from driveInfo in DriveInfo.GetDrives()
                         let name = driveInfo.Name.TrimEnd('\\')
-                        select (INode)new FileNode(this, name, name, name))
+                        let displayName = ShellInfo.GetDisplayName(driveInfo.Name)
+                        select (INode)new FileNode(this, name, name, displayName))
                         .ToArray();
             }
         }
@@ -60,7 +61,7 @@ namespace OneFilePicker.File.Default
 
         public RootFileNode()
         {
-            Icon = ImageLoader.GetComputerImage(true);
+            Icon = ShellInfo.GetComputerImage(true);
             DisplayName = "Computer";
         }
     }

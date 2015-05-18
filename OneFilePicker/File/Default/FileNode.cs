@@ -47,7 +47,8 @@ namespace OneFilePicker.File.Default
         private INode CreateChild(string path)
         {
             var name = System.IO.Path.GetFileName(path);
-            return new FileNode(this, path, name);
+            var displayName = ShellInfo.GetDisplayName(path);
+            return new FileNode(this, path, name, displayName);
         }
 
         public INode[] FolderChildren
@@ -61,7 +62,7 @@ namespace OneFilePicker.File.Default
             get
             {
                 if (_icon == null)
-                    _icon = ImageLoader.GetImage(Path, false);
+                    _icon = ShellInfo.GetIcon(Path, false);
                 return _icon;
             }
         }
@@ -93,7 +94,7 @@ namespace OneFilePicker.File.Default
             Path = path;
             Name = name;
             DisplayName = displayName ?? System.IO.Path.GetFileName(path);
-            DisplayType = ImageLoader.GetFileType(path);
+            DisplayType = ShellInfo.GetFileType(path);
             IsFolder = Directory.Exists(path);
             if (IsFolder)
                 LastWriteTime = new DirectoryInfo(path).LastWriteTime;
