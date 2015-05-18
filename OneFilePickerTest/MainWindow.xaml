@@ -8,7 +8,7 @@
             <oneFilePicker:FilePicker SelectedFolderPath="c:\users" />
         </TabItem>
         <TabItem Header="Folders">
-            <oneFilePicker:FilePicker Mode="Folder" SelectedFolderPath="c:" />
+            <oneFilePicker:FilePicker Mode="Folder" SelectedFolderPath="c:\" />
         </TabItem>
     </TabControl>
 </Window>

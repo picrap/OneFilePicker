@@ -485,8 +485,11 @@ namespace OneFilePicker.Picker
 
         private void OnModeChanged()
         {
-            FullView.Visibility = ShowFilesList ? Visibility.Visible : Visibility.Collapsed;
-            FolderView.Visibility = ShowFilesList ? Visibility.Collapsed : Visibility.Visible;
+            var fullViewVisibility = ShowFilesList ? Visibility.Visible : Visibility.Collapsed;
+            var foldersViewVisibility = ShowFilesList ? Visibility.Collapsed : Visibility.Visible;
+            FullView.Visibility = fullViewVisibility;
+            FolderView.Visibility = foldersViewVisibility;
+            SelectionView.Visibility = fullViewVisibility;
         }
 
         private readonly ISet<string> _isExpanded = new HashSet<string>();

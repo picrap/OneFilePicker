@@ -118,7 +118,7 @@
         </Grid>
 
         <!-- Filters and selection -->
-        <Grid Grid.Row="3" Margin="{DynamicResource TopMargin}">
+        <Grid Grid.Row="3" x:Name="SelectionView" Margin="{DynamicResource TopMargin}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="*"/>
