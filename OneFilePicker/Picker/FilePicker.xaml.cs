@@ -179,6 +179,11 @@ namespace OneFilePicker.Picker
             get { return Mode == FilePickerMode.Default; }
         }
 
+        private TreeView CurrentFoldersView
+        {
+            get { return ShowFilesList ? FullViewFoldersTree : FolderViewFoldersTree; }
+        }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="FilePicker"/> class.
         /// </summary>
@@ -196,6 +201,7 @@ namespace OneFilePicker.Picker
         /// <param name="e">The <see cref="RoutedEventArgs"/> instance containing the event data.</param>
         private void OnLoaded(object sender, RoutedEventArgs e)
         {
+            OnModeChanged();
             OnFilterChanged();
             OnSelectedFolderPathChanged();
         }
@@ -295,7 +301,7 @@ namespace OneFilePicker.Picker
         /// <param name="e">The <see cref="RoutedEventArgs"/> instance containing the event data.</param>
         private void Refresh(object sender, RoutedEventArgs e)
         {
-            var treeViewNode = (TreeViewNode)NodeTree.SelectedItem;
+            var treeViewNode = (TreeViewNode)CurrentFoldersView.SelectedItem;
             if (treeViewNode == null)
                 return;
             treeViewNode.Refresh();
@@ -309,9 +315,31 @@ namespace OneFilePicker.Picker
         /// </summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="object"/> instance containing the event data.</param>
-        private void OnSelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
+        private void OnFullSelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
-            SelectedFolder = ((TreeViewNode)NodeTree.SelectedItem).Node;
+            if (!ShowFilesList)
+                return;
+            OnSelectedItemChanged((TreeView)sender);
+        }
+
+        /// <summary>
+        /// Called when treeview selected item changed.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="object"/> instance containing the event data.</param>
+        private void OnFolderSelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
+        {
+            if (ShowFilesList)
+                return;
+            OnSelectedItemChanged((TreeView)sender);
+        }
+
+        private void OnSelectedItemChanged(TreeView sender)
+        {
+            var treeViewNode = (TreeViewNode)sender.SelectedItem;
+            if (treeViewNode == null)
+                return;
+            SelectedFolder = treeViewNode.Node;
         }
 
         /// <summary>
@@ -334,7 +362,7 @@ namespace OneFilePicker.Picker
         private void CheckSelectedNode()
         {
             if (SelectedFolder == null ||
-                (NodeTree.SelectedItem != null && (SelectedFolder.Path == ((TreeViewNode)NodeTree.SelectedItem).Node.Path)))
+                (CurrentFoldersView.SelectedItem != null && (SelectedFolder.Path == ((TreeViewNode)CurrentFoldersView.SelectedItem).Node.Path)))
                 return;
             try
             {
@@ -457,8 +485,8 @@ namespace OneFilePicker.Picker
 
         private void OnModeChanged()
         {
-            Splitter.Visibility = ShowFilesList ? Visibility.Visible : Visibility.Collapsed;
-            FilesList.Visibility = ShowFilesList ? Visibility.Visible : Visibility.Collapsed;
+            FullView.Visibility = ShowFilesList ? Visibility.Visible : Visibility.Collapsed;
+            FolderView.Visibility = ShowFilesList ? Visibility.Collapsed : Visibility.Visible;
         }
 
         private readonly ISet<string> _isExpanded = new HashSet<string>();
@@ -467,6 +495,5 @@ namespace OneFilePicker.Picker
         {
             RootNodes = NodeProvider.Root.Select(n => new TreeViewNode(n, _isExpanded)).ToArray();
         }
-
     }
 }

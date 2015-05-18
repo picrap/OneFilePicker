@@ -17,6 +17,28 @@
         <Style x:Key="LeftColumnHeader" TargetType="{x:Type GridViewColumnHeader}">
             <Setter Property="HorizontalContentAlignment" Value="Left"/>
         </Style>
+        <Style x:Key="NodeTreeTemplate" TargetType="TreeView">
+            <Setter Property="ItemsSource" Value="{Binding RootNodes, ElementName=This}" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="ItemTemplate">
+                <Setter.Value>
+                    <HierarchicalDataTemplate DataType="picker:TreeViewNode" ItemsSource="{Binding FolderChildren}" >
+                        <StackPanel Orientation="Horizontal" Margin="0,2">
+                            <Image Source="{Binding Node.Icon}" Stretch="UniformToFill" Height="16" />
+                            <TextBlock Text="{Binding Node.DisplayName}" Margin="{DynamicResource LeftMargin}" />
+                        </StackPanel>
+                    </HierarchicalDataTemplate>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="ItemContainerStyle">
+                <Setter.Value>
+                    <Style TargetType="TreeViewItem">
+                        <Setter Property="IsSelected" Value="{Binding IsSelected}" />
+                        <Setter Property="IsExpanded" Value="{Binding IsExpanded}" />
+                    </Style>
+                </Setter.Value>
+            </Setter>
+        </Style>
     </UserControl.Resources>
 
     <Grid>
@@ -56,29 +78,14 @@
         <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="{DynamicResource TopMargin}" />
 
         <!-- File tree and selection panel -->
-        <Grid Grid.Row="2" Margin="{DynamicResource TopMargin}">
+        <Grid x:Name="FullView" Grid.Row="2" Margin="{DynamicResource TopMargin}">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="200"/>
+                <ColumnDefinition Width="200" />
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
             <GridSplitter x:Name="Splitter" Width="5" ShowsPreview="True" />
-            <TreeView Grid.Column="0" x:Name="NodeTree" ItemsSource="{Binding RootNodes, ElementName=This}" Margin="0,0,5,0" BorderThickness="0" 
-				SelectedItemChanged="OnSelectedItemChanged" d:DataContext="{d:DesignInstance picker:TreeViewNode}">
-                <TreeView.ItemTemplate>
-                    <HierarchicalDataTemplate DataType="picker:TreeViewNode" ItemsSource="{Binding FolderChildren}" >
-                        <StackPanel Orientation="Horizontal" Margin="0,2">
-                            <Image Source="{Binding Node.Icon}" Stretch="UniformToFill" Height="16" />
-                            <TextBlock Text="{Binding Node.DisplayName}" Margin="{DynamicResource LeftMargin}" />
-                        </StackPanel>
-                    </HierarchicalDataTemplate>
-                </TreeView.ItemTemplate>
-                <TreeView.ItemContainerStyle>
-                    <Style TargetType="TreeViewItem">
-                        <Setter Property="IsSelected" Value="{Binding IsSelected}" />
-                        <Setter Property="IsExpanded" Value="{Binding IsExpanded}" />
-                    </Style>
-                </TreeView.ItemContainerStyle>
-            </TreeView>
+            <TreeView Grid.Column="0" x:Name="FullViewFoldersTree" Style="{DynamicResource NodeTreeTemplate}"
+                      SelectedItemChanged="OnFullSelectedItemChanged" Margin="0,0,5,0" />
             <ListView Grid.Column="1" x:Name="FilesList" BorderThickness="0" ItemsSource="{Binding SelectedFolder.Children, ElementName=This}"
 				util:GridViewSort.AutoSort="True" SelectionChanged="OnFilesListSelectionChanged" MouseDoubleClick="OnFilesListDoubleClick">
                 <ListView.View>
@@ -103,6 +110,11 @@
                     </GridView>
                 </ListView.View>
             </ListView>
+        </Grid>
+        <Grid Grid.Row="2" x:Name="FolderView">
+        <TreeView x:Name="FolderViewFoldersTree" Style="{DynamicResource NodeTreeTemplate}"
+                      SelectedItemChanged="OnFolderSelectedItemChanged" />
+
         </Grid>
 
         <!-- Filters and selection -->
