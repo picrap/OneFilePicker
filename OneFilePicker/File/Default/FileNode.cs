@@ -12,6 +12,7 @@ namespace OneFilePicker.File.Default
     using System.IO;
     using System.Linq;
     using System.Windows.Media;
+    using Services;
 
     [DebuggerDisplay("{Path}")]
     public class FileNode : INode

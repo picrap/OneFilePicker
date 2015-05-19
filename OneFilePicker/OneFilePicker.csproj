@@ -50,8 +50,8 @@
   <ItemGroup>
     <Compile Include="File\Default\FileNode.cs" />
     <Compile Include="File\Default\FileNodeProvider.cs" />
-    <Compile Include="File\Default\ShellInfo.cs" />
-    <Compile Include="File\Default\ShellInfo.Interop.cs" />
+    <Compile Include="File\Services\ShellInfo.cs" />
+    <Compile Include="File\Services\ShellInfo.Interop.cs" />
     <Compile Include="File\Default\RootFileNode.cs" />
     <Compile Include="Icons\BackIcon.xaml.cs">
       <DependentUpon>BackIcon.xaml</DependentUpon>

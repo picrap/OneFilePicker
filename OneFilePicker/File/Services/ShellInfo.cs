@@ -5,7 +5,7 @@
 // Released under MIT license http://opensource.org/licenses/mit-license.php
 #endregion
 
-namespace OneFilePicker.File.Default
+namespace OneFilePicker.File.Services
 {
     using System;
     using System.Collections.Generic;

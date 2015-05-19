@@ -12,6 +12,7 @@ namespace OneFilePicker.File.Default
     using System.Linq;
     using System.Windows.Media;
     using Picker;
+    using Services;
 
     /// <summary>
     /// This is the default when no custom INode is provided to <see cref="FilePicker"/>.
