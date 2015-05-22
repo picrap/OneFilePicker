@@ -35,7 +35,23 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="ArxOne.Ftp, Version=1.2.3.0, Culture=neutral, PublicKeyToken=da7223da01d9ab51, processorArchitecture=MSIL">
+      <HintPath>..\packages\ArxOne.Ftp.1.2.3.0\lib\net40-Client\ArxOne.Ftp.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="LanExchange.Network, Version=1.0.0.0, Culture=neutral, PublicKeyToken=9045b499df5f614a, processorArchitecture=MSIL">
+      <HintPath>..\packages\LanExchange.Network.1.0.0.0\lib\net40\LanExchange.Network.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="OneFilesystem, Version=0.1.9.0, Culture=neutral, PublicKeyToken=12b83d4a41b22682, processorArchitecture=MSIL">
+      <HintPath>..\packages\OneFilesystem.0.1.9.0-pre\lib\net40\OneFilesystem.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="PresentationFramework.Aero" />
+    <Reference Include="Renci.SshNet, Version=2014.4.6.0, Culture=neutral, PublicKeyToken=1cee9f8bde3db106, processorArchitecture=MSIL">
+      <HintPath>..\packages\SSH.NET.2014.4.6-beta2\lib\net40\Renci.SshNet.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Xml" />
@@ -50,6 +66,8 @@
   <ItemGroup>
     <Compile Include="File\Default\FileNode.cs" />
     <Compile Include="File\Default\FileNodeProvider.cs" />
+    <Compile Include="File\One\OneNode.cs" />
+    <Compile Include="File\One\OneNodeProvider.cs" />
     <Compile Include="File\Services\ShellInfo.cs" />
     <Compile Include="File\Services\ShellInfo.Interop.cs" />
     <Compile Include="File\Default\RootFileNode.cs" />
@@ -105,6 +123,10 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Icons.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

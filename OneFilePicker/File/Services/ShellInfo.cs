@@ -14,6 +14,7 @@ namespace OneFilePicker.File.Services
     using System.Windows.Interop;
     using System.Windows.Media;
     using System.Windows.Media.Imaging;
+    using System.Windows.Navigation;
 
     public static partial class ShellInfo
     {
@@ -169,6 +170,18 @@ namespace OneFilePicker.File.Services
             var shinfo = new SHFILEINFO();
             Win32.SHGetFileInfo(filename, 0, ref shinfo, (uint)Marshal.SizeOf(typeof(SHFILEINFO)), Win32.SHGFI_DISPLAYNAME);
             return shinfo.szDisplayName;
+        }
+
+        public static string GetComputerDisplayName()
+        {
+            var ppidl = IntPtr.Zero;
+            //SHGetKnownFolderIDList(ref iconGuid, 0, IntPtr.Zero, ref ppidl);
+            Win32.SHGetFolderLocation(IntPtr.Zero, Win32.CSIDL_DRIVES, IntPtr.Zero, 0, ref ppidl);
+            var shinfo = new SHFILEINFO();
+            Win32.SHGetFileInfo(ppidl, 0, ref shinfo, (uint)Marshal.SizeOf(typeof(SHFILEINFO)), Win32.SHGFI_DISPLAYNAME | Win32.SHGFI_PIDL);
+            var displayName = shinfo.szDisplayName;
+            Win32.ILFree(ppidl);
+            return displayName;
         }
     }
 }

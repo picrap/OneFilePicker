@@ -30,7 +30,7 @@ namespace OneFilePicker.File
         /// </value>
         INode[] Children { get; }
         /// <summary>
-        /// Gets the directory children.
+        /// Gets the directory children (a subset of Children).
         /// </summary>
         /// <value>
         /// The directory children.

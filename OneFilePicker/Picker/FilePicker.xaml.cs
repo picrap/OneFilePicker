@@ -15,6 +15,7 @@ namespace OneFilePicker.Picker
     using System.Windows.Input;
     using File;
     using File.Default;
+    using File.One;
 
     public partial class FilePicker
     {
@@ -191,7 +192,7 @@ namespace OneFilePicker.Picker
         {
             InitializeComponent();
             Loaded += OnLoaded;
-            NodeProvider = new FileNodeProvider();
+            NodeProvider = new OneNodeProvider();
         }
 
         /// <summary>
