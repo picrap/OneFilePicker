@@ -14,7 +14,6 @@ namespace OneFilePicker.File.Services
     using System.Windows.Interop;
     using System.Windows.Media;
     using System.Windows.Media.Imaging;
-    using System.Windows.Navigation;
 
     public static partial class ShellInfo
     {
@@ -113,17 +112,17 @@ namespace OneFilePicker.File.Services
         /// <summary>
         /// Gets the icon.
         /// </summary>
-        /// <param name="filename">The filename.</param>
+        /// <param name="fileName">The filename.</param>
         /// <param name="large">if set to <c>true</c> [large].</param>
         /// <returns></returns>
-        public static ImageSource GetIcon(string filename, bool large)
+        public static ImageSource GetIcon(string fileName, bool large)
         {
             IntPtr hImg = IntPtr.Zero;
             try
             {
                 var shinfo = new SHFILEINFO();
                 var iconSize = large ? Win32.SHGFI_LARGEICON : Win32.SHGFI_SMALLICON;
-                hImg = Win32.SHGetFileInfo(filename, 0, ref shinfo, (uint)Marshal.SizeOf(typeof(SHFILEINFO)), Win32.SHGFI_ICON | iconSize);
+                hImg = Win32.SHGetFileInfo(GetFileName(fileName), 0, ref shinfo, (uint)Marshal.SizeOf(typeof(SHFILEINFO)), Win32.SHGFI_ICON | iconSize);
                 var image = GetImage(shinfo.hIcon);
                 return image;
             }
@@ -148,27 +147,34 @@ namespace OneFilePicker.File.Services
             }
         }
 
+        private static string GetFileName(string fileName)
+        {
+            if (!fileName.Contains(@"\"))
+                return fileName + @"\";
+            return fileName;
+        }
+
         /// <summary>
         /// Gets the type of the file.
         /// </summary>
-        /// <param name="filename">The filename.</param>
+        /// <param name="fileName">The filename.</param>
         /// <returns></returns>
-        public static string GetFileType(string filename)
+        public static string GetFileType(string fileName)
         {
             var shinfo = new SHFILEINFO();
-            Win32.SHGetFileInfo(filename, 0, ref shinfo, (uint)Marshal.SizeOf(typeof(SHFILEINFO)), Win32.SHGFI_TYPENAME);
+            Win32.SHGetFileInfo(GetFileName(fileName), 0, ref shinfo, (uint)Marshal.SizeOf(typeof(SHFILEINFO)), Win32.SHGFI_TYPENAME);
             return shinfo.szTypeName;
         }
 
         /// <summary>
         /// Gets the display name.
         /// </summary>
-        /// <param name="filename">The filename.</param>
+        /// <param name="fileName">The filename.</param>
         /// <returns></returns>
-        public static string GetDisplayName(string filename)
+        public static string GetDisplayName(string fileName)
         {
             var shinfo = new SHFILEINFO();
-            Win32.SHGetFileInfo(filename, 0, ref shinfo, (uint)Marshal.SizeOf(typeof(SHFILEINFO)), Win32.SHGFI_DISPLAYNAME);
+            Win32.SHGetFileInfo(GetFileName(fileName), 0, ref shinfo, (uint)Marshal.SizeOf(typeof(SHFILEINFO)), Win32.SHGFI_DISPLAYNAME);
             return shinfo.szDisplayName;
         }
 

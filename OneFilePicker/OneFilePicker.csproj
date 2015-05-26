@@ -35,16 +35,16 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="ArxOne.Ftp, Version=1.2.3.0, Culture=neutral, PublicKeyToken=da7223da01d9ab51, processorArchitecture=MSIL">
-      <HintPath>..\packages\ArxOne.Ftp.1.2.3.0\lib\net40-Client\ArxOne.Ftp.dll</HintPath>
+    <Reference Include="ArxOne.Ftp, Version=1.2.5.0, Culture=neutral, PublicKeyToken=da7223da01d9ab51, processorArchitecture=MSIL">
+      <HintPath>..\packages\ArxOne.Ftp.1.2.5.0\lib\net40-Client\ArxOne.Ftp.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="LanExchange.Network, Version=1.0.0.0, Culture=neutral, PublicKeyToken=9045b499df5f614a, processorArchitecture=MSIL">
       <HintPath>..\packages\LanExchange.Network.1.0.0.0\lib\net40\LanExchange.Network.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="OneFilesystem, Version=0.1.9.0, Culture=neutral, PublicKeyToken=12b83d4a41b22682, processorArchitecture=MSIL">
-      <HintPath>..\packages\OneFilesystem.0.1.9.0-pre\lib\net40\OneFilesystem.dll</HintPath>
+    <Reference Include="OneFilesystem, Version=0.2.0.0, Culture=neutral, PublicKeyToken=12b83d4a41b22682, processorArchitecture=MSIL">
+      <HintPath>..\packages\OneFilesystem.0.2.0.0-pre\lib\net40\OneFilesystem.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="PresentationFramework.Aero" />

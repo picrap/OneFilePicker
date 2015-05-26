@@ -8,6 +8,7 @@
 namespace OneFilePicker.File.One
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using System.Windows.Media;
     using ArxOne.OneFilesystem;
@@ -21,7 +22,18 @@ namespace OneFilePicker.File.One
 
         public INode[] Children
         {
-            get { return _filesystem.GetChildren(Path).Select(CreateNode).ToArray(); }
+            get
+            {
+                try
+                {
+                    var children = _filesystem.GetChildren(Path);
+                    if (children != null)
+                        return children.Select(CreateNode).ToArray();
+                }
+                catch (UnauthorizedAccessException)
+                { }
+                return new INode[0];
+            }
         }
 
         public INode[] FolderChildren
@@ -67,7 +79,9 @@ namespace OneFilePicker.File.One
             else
             {
                 Icon = ShellInfo.GetIcon(fileNameOrPath, false);
-                DisplayName = ShellInfo.GetDisplayName(fileNameOrPath) ?? information.Name;
+                DisplayName = ShellInfo.GetDisplayName(fileNameOrPath);
+                if (string.IsNullOrEmpty(DisplayName))
+                    DisplayName = information.Name;
                 DisplayType = ShellInfo.GetFileType(fileNameOrPath);
             }
             IsFolder = information.IsDirectory;
@@ -85,8 +99,8 @@ namespace OneFilePicker.File.One
         /// <returns></returns>
         private static string GetShellFileNameOrPath(OneEntryInformation information)
         {
-            if (string.IsNullOrEmpty(information.Uri.LocalPath))
-                return information.Name;
+            if (string.Equals(information.Protocol, "file", StringComparison.InvariantCultureIgnoreCase))
+                return information.Literal;
             return information.Uri.LocalPath;
         }
 

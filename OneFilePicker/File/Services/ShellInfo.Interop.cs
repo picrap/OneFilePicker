@@ -13,7 +13,7 @@ namespace OneFilePicker.File.Services
     partial class ShellInfo
     {
         // http://support.microsoft.com/kb/319350
-        [StructLayout(LayoutKind.Sequential)]
+        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Auto)]
         internal struct SHFILEINFO
         {
             public IntPtr hIcon;
@@ -43,13 +43,13 @@ namespace OneFilePicker.File.Services
 
             public const uint CSIDL_DRIVES = 0x0011; // My Computer
 
-            [DllImport("shell32")]
+            [DllImport("shell32", CharSet = CharSet.Auto)]
             public static extern IntPtr SHGetFileInfo(string pszPath, uint dwFileAttributes, ref SHFILEINFO psfi, uint cbSizeFileInfo, uint uFlags);
 
-            [DllImport("shell32")]
-            public static extern IntPtr SHGetFileInfo(IntPtr ppidl, uint dwFileAttributes, ref SHFILEINFO psfi, uint cbFileInfo, uint uFlags);
+            [DllImport("shell32", CharSet = CharSet.Auto)]
+            public static extern IntPtr SHGetFileInfo(IntPtr ppidl, uint dwFileAttributes, ref SHFILEINFO psfi, uint cbSizeFileInfo, uint uFlags);
 
-            [DllImport("shell32")]
+            [DllImport("shell32", CharSet = CharSet.Auto)]
             public static extern int ExtractIconEx(string stExeFileName, int nIconIndex, ref IntPtr phiconLarge, ref IntPtr phiconSmall, int nIcons);
 
             [DllImport("comctl32", SetLastError = true)]
