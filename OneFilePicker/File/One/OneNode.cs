@@ -8,7 +8,6 @@
 namespace OneFilePicker.File.One
 {
     using System;
-    using System.Collections.Generic;
     using System.Linq;
     using System.Windows.Media;
     using ArxOne.OneFilesystem;
@@ -57,6 +56,8 @@ namespace OneFilePicker.File.One
 
         public long? LengthKB { get; private set; }
 
+        internal OnePath OnePath { get; private set; }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="OneNode" /> class.
         /// </summary>
@@ -67,6 +68,7 @@ namespace OneFilePicker.File.One
         {
             _filesystem = filesystem;
             Parent = parent;
+            OnePath = information;
             var fileNameOrPath = GetShellFileNameOrPath(information);
             if (information.Path.Count == 0)
             {
