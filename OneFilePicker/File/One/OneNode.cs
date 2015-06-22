@@ -29,6 +29,8 @@ namespace OneFilePicker.File.One
                     if (children != null)
                         return children.Select(CreateNode).ToArray();
                 }
+                catch (NotSupportedException)
+                { }
                 catch (UnauthorizedAccessException)
                 { }
                 return new INode[0];
@@ -88,7 +90,7 @@ namespace OneFilePicker.File.One
             }
             IsFolder = information.IsDirectory;
             Name = information.Name;
-            Path = information.Uri.ToString();
+            Path = information.Literal;
             LastWriteTime = information.LastWriteTimeUtc ?? DateTime.MinValue;
             if (!information.IsDirectory)
                 LengthKB = information.Length >> 10;
@@ -101,9 +103,9 @@ namespace OneFilePicker.File.One
         /// <returns></returns>
         private static string GetShellFileNameOrPath(OneEntryInformation information)
         {
-            if (string.Equals(information.Protocol, "file", StringComparison.InvariantCultureIgnoreCase))
+            //if (string.Equals(information.Protocol, "file", StringComparison.InvariantCultureIgnoreCase))
                 return information.Literal;
-            return information.Uri.LocalPath;
+            //return information.Uri.LocalPath;
         }
 
         /// <summary>

@@ -43,8 +43,8 @@
       <HintPath>..\packages\LanExchange.Network.1.0.0.0\lib\net40\LanExchange.Network.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="OneFilesystem, Version=0.3.0.0, Culture=neutral, PublicKeyToken=12b83d4a41b22682, processorArchitecture=MSIL">
-      <HintPath>..\packages\OneFilesystem.0.3.0.0-pre\lib\net40\OneFilesystem.dll</HintPath>
+    <Reference Include="OneFilesystem, Version=0.3.2.0, Culture=neutral, PublicKeyToken=12b83d4a41b22682, processorArchitecture=MSIL">
+      <HintPath>..\packages\OneFilesystem.0.3.2.0-pre\lib\net40\OneFilesystem.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="PresentationFramework.Aero" />
